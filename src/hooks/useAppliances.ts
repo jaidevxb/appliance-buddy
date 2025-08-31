@@ -1,69 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Appliance } from '@/types/appliance';
-
-// Mock data for development
-const mockAppliances: Appliance[] = [
-  {
-    id: '1',
-    name: 'Samsung Refrigerator',
-    brand: 'Samsung',
-    model: 'RF28R7351SG',
-    purchaseDate: new Date('2023-06-15'),
-    warrantyDurationMonths: 24,
-    serialNumber: 'SAM123456789',
-    purchaseLocation: 'Best Buy',
-    notes: 'French door style with ice maker',
-    supportContacts: [
-      {
-        id: '1',
-        name: 'Samsung Customer Support',
-        company: 'Samsung',
-        phone: '1-800-SAMSUNG',
-        email: 'support@samsung.com',
-        website: 'https://www.samsung.com/us/support/'
-      }
-    ],
-    maintenanceTasks: [
-      {
-        id: '1',
-        applianceId: '1',
-        taskName: 'Replace water filter',
-        scheduledDate: new Date('2024-12-15'),
-        frequency: 'Monthly',
-        status: 'Upcoming',
-        notes: 'Model DA29-00020B filter'
-      }
-    ],
-    linkedDocuments: [
-      {
-        id: '1',
-        title: 'User Manual',
-        url: 'https://www.samsung.com/us/support/owners/product/rf28r7351sg'
-      }
-    ]
-  },
-  {
-    id: '2',
-    name: 'LG Washing Machine',
-    brand: 'LG',
-    model: 'WM3900HWA',
-    purchaseDate: new Date('2024-01-20'),
-    warrantyDurationMonths: 12,
-    serialNumber: 'LG987654321',
-    purchaseLocation: 'Home Depot',
-    supportContacts: [
-      {
-        id: '2',
-        name: 'LG Customer Care',
-        company: 'LG',
-        phone: '1-800-243-0000',
-        email: 'support@lg.com'
-      }
-    ],
-    maintenanceTasks: [],
-    linkedDocuments: []
-  }
-];
+import { generateMockAppliances } from '@/data/mockAppliances';
+import { getMaintenanceStatus } from '@/utils/dateUtils';
 
 export const useAppliances = () => {
   const [appliances, setAppliances] = useState<Appliance[]>([]);
@@ -80,12 +18,14 @@ export const useAppliances = () => {
           maintenanceTasks: app.maintenanceTasks.map((task: any) => ({
             ...task,
             scheduledDate: new Date(task.scheduledDate),
-            completedDate: task.completedDate ? new Date(task.completedDate) : undefined
+            completedDate: task.completedDate ? new Date(task.completedDate) : undefined,
+            // Recompute status to ensure it's current
+            status: getMaintenanceStatus(new Date(task.scheduledDate), task.completedDate ? new Date(task.completedDate) : undefined)
           }))
         }));
         setAppliances(parsedAppliances);
       } else {
-        setAppliances(mockAppliances);
+        setAppliances(generateMockAppliances());
       }
       setLoading(false);
     }, 500);
@@ -122,11 +62,18 @@ export const useAppliances = () => {
     saveAppliances(updated);
   };
 
+  const resetToSampleData = () => {
+    localStorage.removeItem('appliances');
+    const freshData = generateMockAppliances();
+    setAppliances(freshData);
+  };
+
   return {
     appliances,
     loading,
     addAppliance,
     updateAppliance,
-    deleteAppliance
+    deleteAppliance,
+    resetToSampleData
   };
 };

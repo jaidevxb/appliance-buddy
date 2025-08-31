@@ -18,7 +18,7 @@ import { Appliance } from '@/types/appliance';
 import { getWarrantyStatus } from '@/utils/dateUtils';
 
 const Index = () => {
-  const { appliances, loading, addAppliance, updateAppliance } = useAppliances();
+  const { appliances, loading, addAppliance, updateAppliance, resetToSampleData } = useAppliances();
   const [showForm, setShowForm] = useState(false);
   const [editingAppliance, setEditingAppliance] = useState<Appliance | undefined>();
   const [searchTerm, setSearchTerm] = useState('');
@@ -97,10 +97,20 @@ const Index = () => {
                 <p className="text-muted-foreground">Keep track of warranties and maintenance</p>
               </div>
             </div>
-            <Button onClick={() => setShowForm(true)} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add Appliance
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={resetToSampleData}
+                className="gap-2"
+                size="sm"
+              >
+                Reset to Sample Data
+              </Button>
+              <Button onClick={() => setShowForm(true)} className="gap-2">
+                <Plus className="h-4 w-4" />
+                Add Appliance
+              </Button>
+            </div>
           </div>
         </div>
       </header>
