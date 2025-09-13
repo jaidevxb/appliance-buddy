@@ -1,11 +1,12 @@
 import { addMonths, isAfter, isBefore, differenceInDays } from 'date-fns';
 import { WarrantyStatus } from '@/types/appliance';
 
-export const calculateWarrantyEndDate = (purchaseDate: Date, warrantyDurationMonths: number): Date => {
-  return addMonths(purchaseDate, warrantyDurationMonths);
+export const calculateWarrantyEndDate = (purchaseDate: Date | string, warrantyDurationMonths: number): Date => {
+  const dateObj = typeof purchaseDate === 'string' ? new Date(purchaseDate) : purchaseDate;
+  return addMonths(dateObj, warrantyDurationMonths);
 };
 
-export const getWarrantyStatus = (purchaseDate: Date, warrantyDurationMonths: number): WarrantyStatus => {
+export const getWarrantyStatus = (purchaseDate: Date | string, warrantyDurationMonths: number): WarrantyStatus => {
   const now = new Date();
   const warrantyEndDate = calculateWarrantyEndDate(purchaseDate, warrantyDurationMonths);
   const daysUntilExpiry = differenceInDays(warrantyEndDate, now);
@@ -19,21 +20,23 @@ export const getWarrantyStatus = (purchaseDate: Date, warrantyDurationMonths: nu
   }
 };
 
-export const getMaintenanceStatus = (scheduledDate: Date, completedDate?: Date) => {
+export const getMaintenanceStatus = (scheduledDate: Date | string, completedDate?: Date | string) => {
   if (completedDate) {
     return 'Completed';
   }
   
   const now = new Date();
-  if (isBefore(scheduledDate, now)) {
+  const scheduledDateObj = typeof scheduledDate === 'string' ? new Date(scheduledDate) : scheduledDate;
+  if (isBefore(scheduledDateObj, now)) {
     return 'Overdue';
   }
   
   return 'Upcoming';
 };
 
-export const formatDate = (date: Date): string => {
-  return date.toLocaleDateString('en-US', {
+export const formatDate = (date: Date | string): string => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return dateObj.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'

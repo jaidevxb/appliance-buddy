@@ -1,79 +1,158 @@
-import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Appliance } from '@/types/appliance';
-import { generateMockAppliances } from '@/data/mockAppliances';
-import { getMaintenanceStatus } from '@/utils/dateUtils';
+import { apiService } from '@/services/api';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const useAppliances = () => {
-  const [appliances, setAppliances] = useState<Appliance[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { user } = useAuth();
 
-  useEffect(() => {
-    // Simulate loading from storage
-    const timer = setTimeout(() => {
-      const stored = localStorage.getItem('appliances');
-      if (stored) {
-        const parsedAppliances = JSON.parse(stored).map((app: any) => ({
-          ...app,
-          purchaseDate: new Date(app.purchaseDate),
-          maintenanceTasks: app.maintenanceTasks.map((task: any) => ({
-            ...task,
-            scheduledDate: new Date(task.scheduledDate),
-            completedDate: task.completedDate ? new Date(task.completedDate) : undefined,
-            // Recompute status to ensure it's current
-            status: getMaintenanceStatus(new Date(task.scheduledDate), task.completedDate ? new Date(task.completedDate) : undefined)
-          }))
-        }));
-        setAppliances(parsedAppliances);
-      } else {
-        setAppliances(generateMockAppliances());
+  const {
+    data: appliances = [],
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ['appliances', user?.id], // Include user ID in query key
+    queryFn: async () => {
+      try {
+        console.log('Fetching appliances for user:', user?.email);
+        const result = await apiService.getAllAppliances();
+        console.log('Appliances fetched:', result);
+        return result;
+      } catch (error) {
+        console.error('Error fetching appliances:', error);
+        throw error;
       }
-      setLoading(false);
-    }, 500);
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+    enabled: !!user, // Only run query when user is authenticated
+  });
 
-    return () => clearTimeout(timer);
-  }, []);
+  const addApplianceMutation = useMutation({
+    mutationFn: (appliance: Omit<Appliance, 'id' | 'supportContacts' | 'maintenanceTasks' | 'linkedDocuments'>) =>
+      apiService.createAppliance(appliance),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['appliances', user?.id] });
+      toast({
+        title: "Success",
+        description: "Appliance created successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create appliance",
+        variant: "destructive",
+      });
+    },
+  });
 
-  const saveAppliances = (newAppliances: Appliance[]) => {
-    localStorage.setItem('appliances', JSON.stringify(newAppliances));
-    setAppliances(newAppliances);
+  const updateApplianceMutation = useMutation({
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<Appliance> }) =>
+      apiService.updateAppliance(id, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['appliances', user?.id] });
+      toast({
+        title: "Success",
+        description: "Appliance updated successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update appliance",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteApplianceMutation = useMutation({
+    mutationFn: (id: string) => apiService.deleteAppliance(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['appliances', user?.id] });
+      toast({
+        title: "Success",
+        description: "Appliance deleted successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete appliance",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const addAppliance = async (appliance: Omit<Appliance, 'id' | 'supportContacts' | 'maintenanceTasks' | 'linkedDocuments'>) => {
+    return addApplianceMutation.mutateAsync(appliance);
   };
 
-  const addAppliance = (appliance: Omit<Appliance, 'id' | 'supportContacts' | 'maintenanceTasks' | 'linkedDocuments'>) => {
-    const newAppliance: Appliance = {
-      ...appliance,
-      id: crypto.randomUUID(),
-      supportContacts: [],
-      maintenanceTasks: [],
-      linkedDocuments: []
-    };
-    const updated = [...appliances, newAppliance];
-    saveAppliances(updated);
+  const updateAppliance = async (id: string, updates: Partial<Appliance>) => {
+    return updateApplianceMutation.mutateAsync({ id, updates });
   };
 
-  const updateAppliance = (id: string, updates: Partial<Appliance>) => {
-    const updated = appliances.map(app => 
-      app.id === id ? { ...app, ...updates } : app
-    );
-    saveAppliances(updated);
+  const deleteAppliance = async (id: string) => {
+    return deleteApplianceMutation.mutateAsync(id);
   };
 
-  const deleteAppliance = (id: string) => {
-    const updated = appliances.filter(app => app.id !== id);
-    saveAppliances(updated);
+  const resetToSampleDataMutation = useMutation({
+    mutationFn: () => apiService.resetToSampleData(),
+    onSuccess: (data) => {
+      // Don't invalidate queries here - we'll handle this in the component
+      // Return the data to the component for confirmation dialog
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to check existing data",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const confirmResetToSampleDataMutation = useMutation({
+    mutationFn: () => apiService.confirmResetToSampleData(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['appliances', user?.id] });
+      toast({
+        title: "Success",
+        description: "Sample data has been loaded successfully with 5 appliances!",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create sample data",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const resetToSampleData = async () => {
+    return resetToSampleDataMutation.mutateAsync();
   };
 
-  const resetToSampleData = () => {
-    localStorage.removeItem('appliances');
-    const freshData = generateMockAppliances();
-    setAppliances(freshData);
+  const confirmResetToSampleData = async () => {
+    return confirmResetToSampleDataMutation.mutateAsync();
   };
 
   return {
     appliances,
     loading,
+    error,
     addAppliance,
     updateAppliance,
     deleteAppliance,
-    resetToSampleData
+    resetToSampleData,
+    confirmResetToSampleData,
+    isCreating: addApplianceMutation.isPending,
+    isUpdating: updateApplianceMutation.isPending,
+    isDeleting: deleteApplianceMutation.isPending,
+    isResetting: resetToSampleDataMutation.isPending,
+    isConfirmingReset: confirmResetToSampleDataMutation.isPending,
   };
 };
