@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const config = {
-  port: process.env.PORT || 3001,
+  port: process.env.PORT || 3002,
   nodeEnv: process.env.NODE_ENV || 'development',
   databaseUrl: process.env.DATABASE_URL!,
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
+  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:8082,https://YOUR_NETLIFY_DOMAIN.netlify.app',
   jwtSecret: process.env.JWT_SECRET || 'your-jwt-secret-here',
   
   // Supabase configuration
