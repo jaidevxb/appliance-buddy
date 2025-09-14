@@ -20,6 +20,34 @@ This project consists of two main parts:
 
 **URL**: https://lovable.dev/projects/53a6321c-90c6-42f4-8fdb-ac9cd308c00f
 
+## Deployment
+
+This application supports deployment on Railway (backend) and Vercel (frontend).
+
+### Quick Deploy
+
+**For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)**
+
+1. **Backend (Railway)**:
+   - Deploy the `backend` folder to Railway
+   - Configure environment variables from `backend/.env.railway`
+   - Railway will automatically handle builds and deployments
+
+2. **Frontend (Vercel)**:
+   - Connect the repository root to Vercel
+   - Configure environment variables from `.env.vercel`
+   - Vercel will automatically build and deploy the frontend
+
+### Local Development
+
+For local development, use the combined script:
+
+```bash
+npm run dev:full
+```
+
+This starts both frontend (port 3000) and backend (port 3001) simultaneously.
+
 ## Setup Instructions
 
 ### Prerequisites
