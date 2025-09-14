@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const config = {
-  port: process.env.PORT || 3002,
+  port: process.env.PORT || (process.env.NODE_ENV === 'production' ? 3000 : 3002),
   nodeEnv: process.env.NODE_ENV || 'development',
   databaseUrl: process.env.DATABASE_URL!,
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:8082,https://appliance-buddy.netlify.app,https://appliance-buddy.vercel.app',
