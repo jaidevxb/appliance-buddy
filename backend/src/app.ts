@@ -93,30 +93,25 @@ app.get('/', (req, res) => {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-// Start server only if not in Vercel serverless environment
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-  const server = app.listen(config.port, () => {
-    console.log(`🚀 Server running on port ${config.port}`);
-    console.log(`📊 Health check: http://localhost:${config.port}/health`);
-    console.log(`🔗 API base URL: http://localhost:${config.port}/api`);
-    console.log(`🌍 Environment: ${config.nodeEnv}`);
-  });
+// Start server
+const server = app.listen(config.port, () => {
+  console.log(`🚀 Server running on port ${config.port}`);
+  console.log(`📊 Health check: http://localhost:${config.port}/health`);
+  console.log(`🔗 API base URL: http://localhost:${config.port}/api`);
+  console.log(`🌍 Environment: ${config.nodeEnv}`);
+});
 
-  // Graceful shutdown
-  process.on('SIGTERM', () => {
-    console.log('SIGTERM received, shutting down gracefully');
-    server.close(() => {
-      console.log('Process terminated');
-    });
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('Process terminated');
   });
+});
 
-  process.on('SIGINT', () => {
-    console.log('SIGINT received, shutting down gracefully');
-    server.close(() => {
-      console.log('Process terminated');
-    });
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  server.close(() => {
+    console.log('Process terminated');
   });
-}
-
-// Export for Vercel
-export default app;
+});
