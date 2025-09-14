@@ -6,7 +6,7 @@ export const config = {
   port: process.env.PORT || 3002,
   nodeEnv: process.env.NODE_ENV || 'development',
   databaseUrl: process.env.DATABASE_URL!,
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:8082,https://appliance-buddy.netlify.app',
+  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:8082,https://appliance-buddy.netlify.app,https://appliance-buddy.vercel.app',
   jwtSecret: process.env.JWT_SECRET || 'your-jwt-secret-here',
   
   // Supabase configuration
