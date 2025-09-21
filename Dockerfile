@@ -18,8 +18,8 @@ COPY . .
 # Build frontend
 RUN npm run build
 
-# Build backend
-RUN cd backend && npm run build
+# Build backend with explicit TypeScript compilation
+RUN cd backend && npx tsc --project tsconfig.json
 
 # Verify backend build output
 RUN ls -la backend/dist/
