@@ -47,6 +47,9 @@ RUN cp nginx.conf /etc/nginx/nginx.conf
 # Expose port
 EXPOSE 3000
 
+# Add a health check script
+COPY --from=frontend-build /app/test-backend.js ./test-backend.js
+
 # Start both backend and frontend with Nginx proxy
 # Note: we're running the backend from the /app/backend directory
-CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & sleep 10 && node ../test-backend.js && nginx -g 'daemon off;'"]
