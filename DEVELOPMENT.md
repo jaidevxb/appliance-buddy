@@ -7,10 +7,13 @@ This guide will help you set up and run both the frontend and backend locally.
 - Node.js v18 or higher
 - npm or yarn
 - PostgreSQL database (using Supabase)
+- Docker (optional, for containerized development)
 
 ## Getting Started
 
-### 1. Install Dependencies
+### Option 1: Traditional Setup
+
+#### 1. Install Dependencies
 
 Install frontend dependencies:
 ```bash
@@ -24,7 +27,7 @@ npm install
 cd ..
 ```
 
-### 2. Environment Configuration
+#### 2. Environment Configuration
 
 The project is already configured with the necessary environment variables:
 
@@ -36,9 +39,9 @@ The project is already configured with the necessary environment variables:
 - Backend runs on `http://localhost:3001`
 - Connected to Supabase PostgreSQL database
 
-### 3. Running the Application
+#### 3. Running the Application
 
-#### Option 1: Run Both Frontend and Backend Together
+##### Run Both Frontend and Backend Together
 ```bash
 npm run dev:full
 ```
@@ -47,7 +50,7 @@ This will start:
 - Frontend on `http://localhost:3000`
 - Backend on `http://localhost:3001`
 
-#### Option 2: Run Separately
+##### Run Separately
 
 **Start Frontend only:**
 ```bash
@@ -58,6 +61,33 @@ npm run dev
 ```bash
 cd backend
 npm run dev
+```
+
+### Option 2: Docker-based Development
+
+#### 1. Using Docker Compose
+
+Build and start both services with Docker Compose:
+```bash
+docker-compose up --build
+```
+
+This will start:
+- Frontend on `http://localhost:3000`
+- Backend on `http://localhost:3001`
+
+#### 2. Individual Docker Containers
+
+Build and run frontend:
+```bash
+docker build -f Dockerfile.frontend -t appliance-buddy-frontend .
+docker run -p 3000:80 appliance-buddy-frontend
+```
+
+Build and run backend:
+```bash
+docker build -f Dockerfile.backend -t appliance-buddy-backend .
+docker run -p 3001:3001 appliance-buddy-backend
 ```
 
 ### 4. Access the Application
@@ -101,3 +131,9 @@ The backend is configured to allow requests from `http://localhost:3000`. If you
 
 ### Database Connection
 Ensure your Supabase database is accessible and the `DATABASE_URL` in `backend/.env` is correct.
+
+### Docker Issues
+If you encounter issues with Docker:
+1. Ensure Docker is running
+2. Check that ports 3000 and 3001 are not in use
+3. Try rebuilding the containers: `docker-compose up --build --force-recreate`

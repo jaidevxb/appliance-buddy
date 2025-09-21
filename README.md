@@ -32,9 +32,20 @@ npm run dev:full
 
 This starts both frontend (port 3000) and backend (port 3001) simultaneously.
 
+### Railway Deployment (Recommended)
+
+This project includes a single Dockerfile that can deploy both frontend and backend services together:
+
+1. **Deploy to Railway**:
+   - Connect your GitHub repository to Railway
+   - Railway will automatically detect and use the Dockerfile
+   - Configure environment variables according to `.env.example` and `backend/.env.example`
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed Railway deployment instructions.
+
 ### Manual Deployment
 
-For deployment to hosting platforms, you'll need to:
+For deployment to other hosting platforms, you'll need to:
 
 1. **Backend**:
    - Deploy the `backend` folder to your preferred Node.js hosting platform

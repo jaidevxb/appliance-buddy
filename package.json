@@ -10,7 +10,8 @@
     "build:dev": "vite build --mode development",
     "build:vercel": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "railway:build": "npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

@@ -1,15 +1,14 @@
-# Local Development Setup Checklist
+# Railway Deployment Checklist
 
-## Before Starting Development
+## Before Deploying
 
 ### ✅ Repository Setup
-- [ ] Code cloned to local machine
+- [ ] Code pushed to GitHub/Git repository
 - [ ] All sensitive data removed from code
 - [ ] Environment variables properly configured
 - [ ] Dependencies updated in package.json files
 
 ### ✅ Backend Readiness
-- [ ] `backend/` directory exists
 - [ ] Build command works: `cd backend && npm run build`
 - [ ] Start command works: `cd backend && npm start`
 
@@ -22,71 +21,62 @@
 - [ ] Database URL and credentials valid
 - [ ] Required tables exist (or migrations ready)
 
-## During Local Development Setup
+## During Railway Deployment
 
-### 🚀 Backend Setup
-1. [ ] Navigate to backend directory: `cd backend`
-2. [ ] Install dependencies: `npm install`
-3. [ ] Set up environment variables from `backend/.env.example`
-4. [ ] Run database migrations: `npm run db:migrate`
-5. [ ] Start backend server: `npm run dev`
-6. [ ] Test health endpoint: `http://localhost:3001/health`
+### 🚀 Railway Service Deployment
+1. [ ] Create new Railway project
+2. [ ] Connect GitHub repository  
+3. [ ] Railway will automatically detect the Dockerfile
+4. [ ] Add all environment variables:
+   - [ ] `DATABASE_URL` = Supabase PostgreSQL URL
+   - [ ] `SUPABASE_URL` = Supabase project URL
+   - [ ] `SUPABASE_ANON_KEY` = Supabase anon key
+   - [ ] `NODE_ENV` = production
+   - [ ] `FRONTEND_URL` = Railway service URL
+   - [ ] `JWT_SECRET` = Strong random string
+5. [ ] Wait for successful deployment
+6. [ ] Test application access: `https://your-service.up.railway.app`
 
-### 🚀 Frontend Setup
-1. [ ] Install dependencies: `npm install`
-2. [ ] Set up environment variables from `.env.example`
-3. [ ] Start frontend server: `npm run dev`
-4. [ ] Access application at: `http://localhost:5173`
+## Post-Deployment
 
-## Testing Local Development Setup
+### ✅ Verification Tests
+- [ ] Application loads successfully
+- [ ] Backend API responds correctly
+- [ ] Database operations function
+- [ ] User authentication works (if implemented)
+- [ ] All major features operational
 
-### 🔗 Verify Frontend & Backend Integration
-1. [ ] Confirm frontend loads successfully at `http://localhost:5173`
-2. [ ] Confirm backend health check responds at `http://localhost:3001/health`
-3. [ ] Test API calls work (no CORS errors)
-4. [ ] Verify database operations function
-5. [ ] Test user authentication (if implemented)
-6. [ ] Verify all major features operational
+## URLs for Access
 
-## URLs for Local Development
-
-**Backend Health Check:**
+**Application URL:**
 ```
-http://localhost:3001/health
+https://your-service.up.railway.app
 ```
 
 **Backend API:**
 ```
-http://localhost:3001/api
-```
-
-**Frontend Application:**
-```
-http://localhost:5173
+https://your-service.up.railway.app/api
 ```
 
 ## Common Issues & Solutions
 
 ### CORS Errors
-- ✅ Ensure `FRONTEND_URL` in backend .env exactly matches frontend URL
-- ✅ Both URLs should use `http://` for local development
-- ✅ No trailing slashes in URLs
+- ✅ Ensure `FRONTEND_URL` in Railway exactly matches your service URL
+- ✅ URL should use `https://`
 
 ### Build Failures
 - ✅ Check if all dependencies are in correct package.json sections
-- ✅ Verify TypeScript builds locally first
-- ✅ Check logs for specific errors
+- ✅ Verify builds work locally first
+- ✅ Check Railway deployment logs for specific errors
 
 ### Environment Variables Not Loading
-- ✅ Restart development servers after adding variables
+- ✅ Restart deployment after adding variables
 - ✅ Verify variable names match exactly (case-sensitive)
-- ✅ Check for typos in URLs and keys
 
 ### Database Connection Issues
 - ✅ Verify `DATABASE_URL` is correct
-- ✅ Check that database is running and accessible
-- ✅ Confirm credentials are correct
+- ✅ Check Supabase database accessibility
 
 ---
 
-🎯 **Ready for Local Development!** Follow the [DEVELOPMENT.md](./DEVELOPMENT.md) guide for detailed instructions.
+🎯 **Ready for Railway Deployment!** Follow the [DEPLOYMENT.md](./DEPLOYMENT.md) guide for detailed instructions.

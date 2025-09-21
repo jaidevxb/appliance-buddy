@@ -16,7 +16,8 @@
     "db:migrate-auth": "tsx src/utils/runAuthMigration.ts",
     "db:handle-existing": "tsx src/utils/handleExistingData.ts",
     "db:create-mock-users": "tsx src/utils/createMockUsers.ts",
-    "db:seed": "tsx src/utils/seedDatabase.ts"
+    "db:seed": "tsx src/utils/seedDatabase.ts",
+    "railway:build": "npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
