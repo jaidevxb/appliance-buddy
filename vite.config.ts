@@ -18,6 +18,11 @@ export default defineConfig(({ mode }) => ({
     // Allow Railway hosts for deployment
     strictPort: false,
     cors: true,
+    // Allow the Railway domain
+    allowedHosts: [
+      "appliance-buddy-production.up.railway.app",
+      "localhost"
+    ],
   },
   plugins: [
     react(),
