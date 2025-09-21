@@ -48,4 +48,5 @@ RUN cp nginx.conf /etc/nginx/nginx.conf
 EXPOSE 3000
 
 # Start both backend and frontend with Nginx proxy
+# Note: we're running the backend from the /app/backend directory
 CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & nginx -g 'daemon off;'"]
