@@ -89,6 +89,15 @@ app.get('/', (req, res) => {
   });
 });
 
+// Add a simple test endpoint to verify the backend is running
+app.get('/test', (req, res) => {
+  res.json({
+    message: 'Backend is running',
+    port: config.port,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Error handling middleware (must be last)
 app.use(notFoundHandler);
 app.use(errorHandler);
