@@ -1,6 +1,7 @@
-# Single Dockerfile for Appliance Buddy (Frontend + Backend with Nginx Proxy)
+# Multi-stage Dockerfile for Appliance Buddy (Frontend + Backend)
 
-FROM node:18-alpine AS builder
+# Build stage for frontend
+FROM node:18-alpine AS frontend-build
 
 WORKDIR /app
 
@@ -21,23 +22,30 @@ RUN npm run build
 # Build backend
 RUN cd backend && npx tsc --project tsconfig.json
 
-# Production stage with Nginx
-FROM nginx:alpine
+# Production stage
+FROM node:18-alpine AS production
+
+WORKDIR /app
 
 # Copy built frontend files
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=frontend-build /app/dist ./dist
 
-# Copy Nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy built backend files
+COPY --from=frontend-build /app/backend/dist ./backend/dist
+COPY --from=frontend-build /app/backend/node_modules ./backend/node_modules
+COPY --from=frontend-build /app/backend/package*.json ./backend/
 
-# Copy backend files
-COPY --from=builder /app/backend/dist /app/backend/dist
-COPY --from=builder /app/backend/node_modules /app/backend/node_modules
-COPY --from=builder /app/backend/package*.json /app/backend/
+# Copy nginx configuration
+COPY --from=frontend-build /app/nginx.conf ./nginx.conf
+
+# Install nginx
+RUN apk add --no-cache nginx
+
+# Copy nginx configuration to the correct location
+RUN cp nginx.conf /etc/nginx/nginx.conf
 
 # Expose port
 EXPOSE 3000
 
 # Start both backend and frontend with Nginx proxy
-# Set PORT environment variable for backend to use port 3001
-CMD ["sh", "-c", "cd /app/backend && PORT=3001 node dist/app.js & nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & nginx -g 'daemon off;'"]
