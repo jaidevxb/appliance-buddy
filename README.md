@@ -22,7 +22,29 @@ This project consists of two main parts:
 
 ## Deployment
 
-This application supports deployment on Railway (backend) and Vercel (frontend).
+### Local Development
+
+For local development, use the combined script:
+
+```bash
+npm run dev:full
+```
+
+This starts both frontend (port 3000) and backend (port 3001) simultaneously.
+
+### Manual Deployment
+
+For deployment to hosting platforms, you'll need to:
+
+1. **Backend**:
+   - Deploy the `backend` folder to your preferred Node.js hosting platform
+   - Configure environment variables according to `backend/.env.example`
+   - Ensure the hosting platform can build and run TypeScript applications
+
+2. **Frontend**:
+   - Build the frontend with `npm run build`
+   - Deploy the generated `dist/` folder to your preferred static hosting platform
+   - Configure environment variables according to `.env.example`
 
 ### Quick Deploy
 
@@ -37,16 +59,6 @@ This application supports deployment on Railway (backend) and Vercel (frontend).
    - Connect the repository root to Vercel
    - Configure environment variables from `.env.vercel`
    - Vercel will automatically build and deploy the frontend
-
-### Local Development
-
-For local development, use the combined script:
-
-```bash
-npm run dev:full
-```
-
-This starts both frontend (port 3000) and backend (port 3001) simultaneously.
 
 ## Setup Instructions
 

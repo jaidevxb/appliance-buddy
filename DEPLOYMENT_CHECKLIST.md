@@ -1,24 +1,20 @@
-# Pre-Deployment Checklist
+# Local Development Setup Checklist
 
-## Before Deploying
+## Before Starting Development
 
 ### ✅ Repository Setup
-- [ ] Code pushed to GitHub/Git repository
+- [ ] Code cloned to local machine
 - [ ] All sensitive data removed from code
 - [ ] Environment variables properly configured
 - [ ] Dependencies updated in package.json files
 
-### ✅ Backend (Railway) Readiness
-- [ ] `backend/Procfile` exists
-- [ ] `backend/.env.railway` configured  
-- [ ] TypeScript and @types/* moved to dependencies (for Railway builds)
+### ✅ Backend Readiness
+- [ ] `backend/` directory exists
 - [ ] Build command works: `cd backend && npm run build`
 - [ ] Start command works: `cd backend && npm start`
 
-### ✅ Frontend (Vercel) Readiness  
-- [ ] `vercel.json` configured
-- [ ] `.env.vercel` template ready
-- [ ] Build command works: `npm run build:vercel`
+### ✅ Frontend Readiness  
+- [ ] Build command works: `npm run build`
 - [ ] Static files generated in `dist/` directory
 
 ### ✅ Database (Supabase)
@@ -26,75 +22,71 @@
 - [ ] Database URL and credentials valid
 - [ ] Required tables exist (or migrations ready)
 
-## During Deployment
+## During Local Development Setup
 
-### 🚀 Railway Backend Deployment
-1. [ ] Create new Railway project
-2. [ ] Connect GitHub repository  
-3. [ ] Set root directory to `backend`
-4. [ ] Add all environment variables from `.env.railway`
-5. [ ] Wait for successful deployment
-6. [ ] Test health endpoint: `https://your-app.railway.app/health`
-7. [ ] Copy Railway URL for frontend configuration
+### 🚀 Backend Setup
+1. [ ] Navigate to backend directory: `cd backend`
+2. [ ] Install dependencies: `npm install`
+3. [ ] Set up environment variables from `backend/.env.example`
+4. [ ] Run database migrations: `npm run db:migrate`
+5. [ ] Start backend server: `npm run dev`
+6. [ ] Test health endpoint: `http://localhost:3001/health`
 
-### 🚀 Vercel Frontend Deployment
-1. [ ] Create new Vercel project
-2. [ ] Connect GitHub repository (root directory)
-3. [ ] Set build command to `npm run build:vercel`
-4. [ ] Add environment variables:
-   - [ ] `VITE_API_URL` = Railway backend URL + `/api`
-   - [ ] `VITE_SUPABASE_URL` = Supabase project URL
-   - [ ] `VITE_SUPABASE_ANON_KEY` = Supabase anon key
-5. [ ] Deploy and wait for completion
-6. [ ] Copy Vercel URL for backend CORS configuration
+### 🚀 Frontend Setup
+1. [ ] Install dependencies: `npm install`
+2. [ ] Set up environment variables from `.env.example`
+3. [ ] Start frontend server: `npm run dev`
+4. [ ] Access application at: `http://localhost:5173`
 
-## Post-Deployment
+## Testing Local Development Setup
 
-### 🔗 Connect Frontend & Backend
-1. [ ] Update Railway `FRONTEND_URL` with actual Vercel URL
-2. [ ] Update Vercel `VITE_API_URL` with actual Railway URL  
-3. [ ] Trigger redeploy of both services
-4. [ ] Test full application functionality
+### 🔗 Verify Frontend & Backend Integration
+1. [ ] Confirm frontend loads successfully at `http://localhost:5173`
+2. [ ] Confirm backend health check responds at `http://localhost:3001/health`
+3. [ ] Test API calls work (no CORS errors)
+4. [ ] Verify database operations function
+5. [ ] Test user authentication (if implemented)
+6. [ ] Verify all major features operational
 
-### ✅ Verification Tests
-- [ ] Frontend loads successfully
-- [ ] Backend health check responds
-- [ ] API calls work (no CORS errors)
-- [ ] Database operations function
-- [ ] User authentication works
-- [ ] All major features operational
+## URLs for Local Development
 
-## URLs to Update
-
-After deployment, update these URLs:
-
-**In Railway Environment Variables:**
+**Backend Health Check:**
 ```
-FRONTEND_URL=https://your-actual-vercel-app.vercel.app
+http://localhost:3001/health
 ```
 
-**In Vercel Environment Variables:**
+**Backend API:**
 ```
-VITE_API_URL=https://your-actual-railway-app.railway.app/api
+http://localhost:3001/api
+```
+
+**Frontend Application:**
+```
+http://localhost:5173
 ```
 
 ## Common Issues & Solutions
 
 ### CORS Errors
-- ✅ Ensure `FRONTEND_URL` in Railway exactly matches Vercel URL
-- ✅ Both URLs should use `https://`
+- ✅ Ensure `FRONTEND_URL` in backend .env exactly matches frontend URL
+- ✅ Both URLs should use `http://` for local development
 - ✅ No trailing slashes in URLs
 
 ### Build Failures
 - ✅ Check if all dependencies are in correct package.json sections
 - ✅ Verify TypeScript builds locally first
-- ✅ Check deployment logs for specific errors
+- ✅ Check logs for specific errors
 
 ### Environment Variables Not Loading
-- ✅ Restart deployments after adding variables
+- ✅ Restart development servers after adding variables
 - ✅ Verify variable names match exactly (case-sensitive)
 - ✅ Check for typos in URLs and keys
 
+### Database Connection Issues
+- ✅ Verify `DATABASE_URL` is correct
+- ✅ Check that database is running and accessible
+- ✅ Confirm credentials are correct
+
 ---
 
-🎯 **Ready to Deploy!** Follow the [DEPLOYMENT.md](./DEPLOYMENT.md) guide for detailed instructions.
+🎯 **Ready for Local Development!** Follow the [DEVELOPMENT.md](./DEVELOPMENT.md) guide for detailed instructions.
