@@ -1,7 +1,10 @@
 import { Appliance, SupportContact, MaintenanceTask, LinkedDocument } from '@/types/appliance';
 import { supabase } from '@/lib/supabase';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
+// Use relative path for API calls in production, absolute path for development
+const API_BASE_URL = import.meta.env.PROD 
+  ? '/api'  // Relative path when deployed
+  : (import.meta.env.VITE_API_URL || 'http://localhost:3001/api');  // Absolute path for development
 
 interface ApiResponse<T = any> {
   success: boolean;

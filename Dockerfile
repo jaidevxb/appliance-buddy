@@ -1,6 +1,6 @@
-# Single Dockerfile for Appliance Buddy (Frontend + Backend)
+# Single Dockerfile for Appliance Buddy (Frontend + Backend with Nginx Proxy)
 
-FROM node:18-alpine
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
@@ -18,14 +18,26 @@ COPY . .
 # Build frontend
 RUN npm run build
 
-# Build backend with explicit TypeScript compilation
+# Build backend
 RUN cd backend && npx tsc --project tsconfig.json
 
-# Verify backend build output
-RUN ls -la backend/dist/
+# Production stage with Nginx
+FROM nginx:alpine
 
-# Expose ports for both frontend and backend
-EXPOSE 3000 3001
+# Copy built frontend files
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Start both frontend and backend
-CMD ["sh", "-c", "cd backend && NODE_OPTIONS=--experimental-specifier-resolution=node node dist/app.js & npm run preview -- --host 0.0.0.0 --port 3000"]
+# Copy Nginx configuration
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy backend files
+COPY --from=builder /app/backend/dist /app/backend/dist
+COPY --from=builder /app/backend/node_modules /app/backend/node_modules
+COPY --from=builder /app/backend/package*.json /app/backend/
+
+# Expose port
+EXPOSE 3000
+
+# Start both backend and frontend with Nginx proxy
+# Set PORT environment variable for backend to use port 3001
+CMD ["sh", "-c", "cd /app/backend && PORT=3001 node dist/app.js & nginx -g 'daemon off;'"]
