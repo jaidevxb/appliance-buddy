@@ -25,4 +25,4 @@ RUN cd backend && npm run build
 EXPOSE 3000 3001
 
 # Start both frontend and backend
-CMD ["sh", "-c", "cd backend && npm start & npm run preview -- --port 3000"]
+CMD ["sh", "-c", "cd backend && npm start & npm run preview -- --host 0.0.0.0 --port 3000"]

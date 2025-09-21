@@ -8,6 +8,16 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 3000,
+    // Allow Railway hosts for deployment
+    strictPort: false,
+    cors: true,
+  },
+  preview: {
+    host: "::",
+    port: 3000,
+    // Allow Railway hosts for deployment
+    strictPort: false,
+    cors: true,
   },
   plugins: [
     react(),
