@@ -6,8 +6,7 @@ FROM node:18-alpine AS frontend-build
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
-COPY backend/package*.json ./backend/
+COPY package*.json ./backend/package*.json ./
 
 # Install dependencies for both frontend and backend
 RUN npm install
@@ -20,7 +19,7 @@ COPY . .
 RUN npm run build
 
 # Build backend
-RUN cd backend && npx tsc --project tsconfig.json
+RUN cd backend && npm run build
 
 # Production stage
 FROM node:18-alpine AS production
@@ -38,6 +37,9 @@ COPY --from=frontend-build /app/backend/package*.json ./backend/
 # Copy nginx configuration
 COPY --from=frontend-build /app/nginx.conf ./nginx.conf
 
+# Copy test script to the backend directory
+COPY --from=frontend-build /app/test-backend.js ./backend/test-backend.js
+
 # Install nginx
 RUN apk add --no-cache nginx
 
@@ -47,9 +49,6 @@ RUN cp nginx.conf /etc/nginx/nginx.conf
 # Expose port
 EXPOSE 3000
 
-# Add a health check script
-COPY --from=frontend-build /app/test-backend.js ./test-backend.js
-
 # Start both backend and frontend with Nginx proxy
 # Note: we're running the backend from the /app/backend directory
-CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & sleep 10 && node ../test-backend.js && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & sleep 10 && node test-backend.js && nginx -g 'daemon off;'"]
