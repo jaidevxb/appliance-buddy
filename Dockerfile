@@ -6,11 +6,14 @@ FROM node:18-alpine AS frontend-build
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./backend/package*.json ./
+COPY package*.json ./
+COPY backend/package*.json ./backend/
 
-# Install dependencies for both frontend and backend
-RUN npm install
-RUN cd backend && npm install
+# Install frontend dependencies separately to avoid conflicts
+RUN npm install --legacy-peer-deps
+
+# Install backend dependencies separately
+RUN cd backend && npm install --legacy-peer-deps
 
 # Copy source code
 COPY . .
