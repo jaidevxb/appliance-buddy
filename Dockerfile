@@ -40,8 +40,8 @@ COPY --from=frontend-build /app/backend/package*.json ./backend/
 # Copy nginx configuration
 COPY --from=frontend-build /app/nginx.conf ./nginx.conf
 
-# Copy test script to the backend directory
-COPY --from=frontend-build /app/test-backend.js ./backend/test-backend.js
+# Copy test script to the root directory where it's expected to be run
+COPY --from=frontend-build /app/test-backend.js ./test-backend.js
 
 # Install nginx
 RUN apk add --no-cache nginx
@@ -54,4 +54,4 @@ EXPOSE 3000
 
 # Start both backend and frontend with Nginx proxy
 # Note: we're running the backend from the /app/backend directory
-CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & sleep 10 && node test-backend.js && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & sleep 10 && node ../test-backend.js && nginx -g 'daemon off;'"]
