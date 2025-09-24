@@ -3,20 +3,20 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import { config } from './config/environment';
-import { db } from './config/database';
-import { ApplianceService } from './services/applianceService';
-import { MaintenanceService } from './services/maintenanceService';
-import { SupportContactService } from './services/supportContactService';
-import { LinkedDocumentService } from './services/linkedDocumentService';
-import { ApplianceController } from './controllers/applianceController';
-import { MaintenanceController } from './controllers/maintenanceController';
-import { SupportContactController } from './controllers/supportContactController';
-import { LinkedDocumentController } from './controllers/linkedDocumentController';
-import { createApplianceRoutes } from './routes/appliances';
-import { authRoutes } from './routes/auth';
-import { errorHandler, notFoundHandler } from './middleware/errorHandler';
-import { authenticateUser, optionalAuth } from './middleware/auth';
+import { config } from './config/environment.js';
+import { db } from './config/database.js';
+import { ApplianceService } from './services/applianceService.js';
+import { MaintenanceService } from './services/maintenanceService.js';
+import { SupportContactService } from './services/supportContactService.js';
+import { LinkedDocumentService } from './services/linkedDocumentService.js';
+import { ApplianceController } from './controllers/applianceController.js';
+import { MaintenanceController } from './controllers/maintenanceController.js';
+import { SupportContactController } from './controllers/supportContactController.js';
+import { LinkedDocumentController } from './controllers/linkedDocumentController.js';
+import { createApplianceRoutes } from './routes/appliances.js';
+import { authRoutes } from './routes/auth.js';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { authenticateUser, optionalAuth } from './middleware/auth.js';
 
 const app = express();
 

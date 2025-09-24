@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
-import { config } from '../config/environment';
+import { config } from '../config/environment.js';
 
 // Extend Request interface to include user
 declare global {

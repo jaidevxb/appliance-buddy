@@ -1,8 +1,8 @@
 import { eq, desc, and } from 'drizzle-orm';
-import { Database } from '../config/database';
-import { appliances } from '../models/schema';
-import { ApplianceCreateData, ApplianceUpdateData } from '../types/api';
-import { parseDate, getMaintenanceStatus } from '../utils/dateUtils';
+import { Database } from '../config/database.js';
+import { appliances } from '../models/schema.js';
+import { ApplianceCreateData, ApplianceUpdateData } from '../types/api.js';
+import { parseDate, getMaintenanceStatus } from '../utils/dateUtils.js';
 
 export class ApplianceService {
   constructor(private db: Database) {}

@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { createClient } from '@supabase/supabase-js';
-import { config } from '../config/environment';
-import { db } from '../config/database';
-import { users, appliances } from '../models/schema';
-import { createSampleDataForUser } from '../utils/sampleDataForUser';
+import { config } from '../config/environment.js';
+import { db } from '../config/database.js';
+import { users, appliances } from '../models/schema.js';
+import { createSampleDataForUser } from '../utils/sampleDataForUser.js';
 import { eq } from 'drizzle-orm';
 
 const router = Router();

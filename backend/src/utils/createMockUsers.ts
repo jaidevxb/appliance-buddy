@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { config } from '../config/environment';
+import { config } from '../config/environment.js';
 import { db } from '../config/database';
 import { users, appliances, supportContacts, maintenanceTasks, linkedDocuments } from '../models/schema';
 import { addDays, subDays } from 'date-fns';
