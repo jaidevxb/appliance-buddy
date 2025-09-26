@@ -5,24 +5,34 @@ FROM node:18-alpine AS frontend-build
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files for frontend
 COPY package*.json ./
-COPY backend/package*.json ./backend/
+COPY vite.config.ts ./
 
-# Install frontend dependencies separately to avoid conflicts
+# Install frontend dependencies with legacy peer deps to avoid conflicts
 RUN npm install --legacy-peer-deps
 
-# Install backend dependencies separately
-RUN cd backend && npm install --legacy-peer-deps
-
-# Copy source code
-COPY . .
+# Copy frontend source code
+COPY src ./src
+COPY index.html .
+COPY tsconfig*.json .
+COPY tailwind.config.ts .
+COPY postcss.config.js .
+COPY components.json .
 
 # Build frontend
 RUN npm run build
 
-# Build backend
-RUN cd backend && npm run build
+# Build stage for backend
+FROM node:18-alpine AS backend-build
+
+WORKDIR /app
+
+# Copy backend files
+COPY backend ./backend
+
+# Install backend dependencies with legacy peer deps to avoid conflicts
+RUN cd backend && npm install --legacy-peer-deps && npm run build
 
 # Production stage
 FROM node:18-alpine AS production
@@ -33,15 +43,15 @@ WORKDIR /app
 COPY --from=frontend-build /app/dist ./dist
 
 # Copy built backend files
-COPY --from=frontend-build /app/backend/dist ./backend/dist
-COPY --from=frontend-build /app/backend/node_modules ./backend/node_modules
-COPY --from=frontend-build /app/backend/package*.json ./backend/
+COPY --from=backend-build /app/backend/dist ./backend/dist
+COPY --from=backend-build /app/backend/node_modules ./backend/node_modules
+COPY --from=backend-build /app/backend/package*.json ./backend/
 
 # Copy nginx configuration
-COPY --from=frontend-build /app/nginx.conf ./nginx.conf
+COPY nginx.conf ./nginx.conf
 
 # Copy test script to the root directory where it's expected to be run
-COPY --from=frontend-build /app/test-backend.js ./test-backend.js
+COPY test-backend.js ./test-backend.js
 
 # Install nginx
 RUN apk add --no-cache nginx
