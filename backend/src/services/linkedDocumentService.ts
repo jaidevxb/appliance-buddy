@@ -1,7 +1,7 @@
 import { eq, and, desc } from 'drizzle-orm';
-import { Database } from '../config/database.js';
-import { linkedDocuments } from '../models/schema.js';
-import { LinkedDocumentData, LinkedDocumentUpdateData } from '../types/api.js';
+import { Database } from '../config/database';
+import { linkedDocuments } from '../models/schema';
+import { LinkedDocumentData, LinkedDocumentUpdateData } from '../types/api';
 
 export class LinkedDocumentService {
   constructor(private db: Database) {}
@@ -26,7 +26,8 @@ export class LinkedDocumentService {
     const [document] = await this.db
       .insert(linkedDocuments)
       .values({
-        ...data,
+        title: data.title,
+        url: data.url,
         applianceId,
         updatedAt: new Date(),
       })
@@ -36,12 +37,14 @@ export class LinkedDocumentService {
   }
 
   async updateLinkedDocument(applianceId: string, documentId: string, data: LinkedDocumentUpdateData) {
+    const updateData: any = { updatedAt: new Date() };
+    
+    if (data.title !== undefined) updateData.title = data.title;
+    if (data.url !== undefined) updateData.url = data.url;
+
     const [document] = await this.db
       .update(linkedDocuments)
-      .set({
-        ...data,
-        updatedAt: new Date(),
-      })
+      .set(updateData)
       .where(and(
         eq(linkedDocuments.id, documentId),
         eq(linkedDocuments.applianceId, applianceId)

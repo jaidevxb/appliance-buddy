@@ -1,6 +1,6 @@
 import express from 'express';
-import cors from 'cors';
 import helmet from 'helmet';
+import cors from 'cors';
 import morgan from 'morgan';
 
 import { config } from './config/environment.js';
@@ -25,7 +25,7 @@ app.use(helmet());
 
 // CORS configuration
 app.use(cors({
-  origin: (origin, callback) => {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     const allowedOrigins = config.getFrontendUrls();
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);

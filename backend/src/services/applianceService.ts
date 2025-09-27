@@ -1,8 +1,8 @@
 import { eq, desc, and } from 'drizzle-orm';
-import { Database } from '../config/database.js';
-import { appliances } from '../models/schema.js';
-import { ApplianceCreateData, ApplianceUpdateData } from '../types/api.js';
-import { parseDate, getMaintenanceStatus } from '../utils/dateUtils.js';
+import { Database } from '../config/database';
+import { appliances } from '../models/schema';
+import { ApplianceCreateData, ApplianceUpdateData } from '../types/api';
+import { parseDate, getMaintenanceStatus } from '../utils/dateUtils';
 
 export class ApplianceService {
   constructor(private db: Database) {}
@@ -62,9 +62,15 @@ export class ApplianceService {
     const [appliance] = await this.db
       .insert(appliances)
       .values({
-        ...data,
-        userId, // Associate with the user
+        name: data.name,
+        brand: data.brand,
+        model: data.model,
         purchaseDate: parseDate(data.purchaseDate),
+        warrantyDurationMonths: data.warrantyDurationMonths,
+        serialNumber: data.serialNumber,
+        purchaseLocation: data.purchaseLocation,
+        notes: data.notes,
+        userId, // Associate with the user
         updatedAt: new Date(),
       })
       .returning();
@@ -73,11 +79,16 @@ export class ApplianceService {
   }
 
   async updateAppliance(id: string, data: ApplianceUpdateData, userId?: string) {
-    const updateData: any = { ...data, updatedAt: new Date() };
+    const updateData: any = { updatedAt: new Date() };
     
-    if (data.purchaseDate) {
-      updateData.purchaseDate = parseDate(data.purchaseDate);
-    }
+    if (data.name !== undefined) updateData.name = data.name;
+    if (data.brand !== undefined) updateData.brand = data.brand;
+    if (data.model !== undefined) updateData.model = data.model;
+    if (data.purchaseDate !== undefined) updateData.purchaseDate = parseDate(data.purchaseDate);
+    if (data.warrantyDurationMonths !== undefined) updateData.warrantyDurationMonths = data.warrantyDurationMonths;
+    if (data.serialNumber !== undefined) updateData.serialNumber = data.serialNumber;
+    if (data.purchaseLocation !== undefined) updateData.purchaseLocation = data.purchaseLocation;
+    if (data.notes !== undefined) updateData.notes = data.notes;
 
     const whereCondition = userId 
       ? and(eq(appliances.id, id), eq(appliances.userId, userId))

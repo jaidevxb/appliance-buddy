@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { SupportContactService } from '../services/supportContactService.js';
-import { ApplianceService } from '../services/applianceService.js';
-import { sendSuccess, sendNotFound } from '../utils/responseHelpers.js';
-import { asyncHandler } from '../middleware/errorHandler.js';
-import { SupportContactData, SupportContactUpdateData } from '../types/api.js';
+import { SupportContactService } from '../services/supportContactService';
+import { ApplianceService } from '../services/applianceService';
+import { sendSuccess, sendNotFound } from '../utils/responseHelpers';
+import { asyncHandler } from '../middleware/errorHandler';
+import { SupportContactData, SupportContactUpdateData } from '../types/api';
 
 export class SupportContactController {
   constructor(

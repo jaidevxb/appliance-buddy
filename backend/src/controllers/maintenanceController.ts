@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { MaintenanceService } from '../services/maintenanceService.js';
-import { ApplianceService } from '../services/applianceService.js';
-import { sendSuccess, sendNotFound, sendError } from '../utils/responseHelpers.js';
-import { asyncHandler } from '../middleware/errorHandler.js';
-import { MaintenanceTaskData, MaintenanceTaskUpdateData } from '../types/api.js';
+import { MaintenanceService } from '../services/maintenanceService';
+import { ApplianceService } from '../services/applianceService';
+import { sendSuccess, sendNotFound, sendError } from '../utils/responseHelpers';
+import { asyncHandler } from '../middleware/errorHandler';
+import { MaintenanceTaskData, MaintenanceTaskUpdateData } from '../types/api';
 
 export class MaintenanceController {
   constructor(

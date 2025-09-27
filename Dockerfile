@@ -64,4 +64,4 @@ EXPOSE 3000
 
 # Start both backend and frontend with Nginx proxy
 # Note: we're running the backend from the /app/backend directory
-CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & sleep 10 && node ../test-backend.js && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & sleep 10 && node /app/test-backend.js && nginx -g 'daemon off;'"]

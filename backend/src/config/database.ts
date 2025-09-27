@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import * as postgres from 'postgres';
 import * as schema from '../models/schema.js'; // Add .js extension for compiled output
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -12,7 +12,7 @@ if (!connectionString) {
 }
 
 // Configure for Supabase with SSL and optimized connection settings
-export const sql = postgres(connectionString, { 
+export const sql = postgres.default(connectionString, { 
   max: 1,
   idle_timeout: 20,
   connect_timeout: 10,

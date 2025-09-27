@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { LinkedDocumentService } from '../services/linkedDocumentService.js';
-import { ApplianceService } from '../services/applianceService.js';
-import { sendSuccess, sendNotFound } from '../utils/responseHelpers.js';
-import { asyncHandler } from '../middleware/errorHandler.js';
-import { LinkedDocumentData, LinkedDocumentUpdateData } from '../types/api.js';
+import { LinkedDocumentService } from '../services/linkedDocumentService';
+import { ApplianceService } from '../services/applianceService';
+import { sendSuccess, sendNotFound } from '../utils/responseHelpers';
+import { asyncHandler } from '../middleware/errorHandler';
+import { LinkedDocumentData, LinkedDocumentUpdateData } from '../types/api';
 
 export class LinkedDocumentController {
   constructor(

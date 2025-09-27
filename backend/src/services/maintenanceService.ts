@@ -1,8 +1,8 @@
 import { eq, and, desc } from 'drizzle-orm';
-import { Database } from '../config/database.js';
-import { maintenanceTasks } from '../models/schema.js';
-import { MaintenanceTaskData, MaintenanceTaskUpdateData } from '../types/api.js';
-import { parseDate, getMaintenanceStatus } from '../utils/dateUtils.js';
+import { Database } from '../config/database';
+import { maintenanceTasks } from '../models/schema';
+import { MaintenanceTaskData, MaintenanceTaskUpdateData } from '../types/api';
+import { parseDate, getMaintenanceStatus } from '../utils/dateUtils';
 
 export class MaintenanceService {
   constructor(private db: Database) {}
@@ -43,10 +43,14 @@ export class MaintenanceService {
     const [task] = await this.db
       .insert(maintenanceTasks)
       .values({
-        ...data,
-        applianceId,
+        taskName: data.taskName,
         scheduledDate: parseDate(data.scheduledDate),
+        frequency: data.frequency,
+        serviceProvider: data.serviceProvider,
+        notes: data.notes,
+        status: data.status,
         completedDate: data.completedDate ? parseDate(data.completedDate) : null,
+        applianceId,
         updatedAt: new Date(),
       })
       .returning();
@@ -55,15 +59,15 @@ export class MaintenanceService {
   }
 
   async updateMaintenanceTask(applianceId: string, taskId: string, data: MaintenanceTaskUpdateData) {
-    const updateData: any = { ...data, updatedAt: new Date() };
+    const updateData: any = { updatedAt: new Date() };
     
-    if (data.scheduledDate) {
-      updateData.scheduledDate = parseDate(data.scheduledDate);
-    }
-    
-    if (data.completedDate) {
-      updateData.completedDate = parseDate(data.completedDate);
-    }
+    if (data.taskName !== undefined) updateData.taskName = data.taskName;
+    if (data.scheduledDate !== undefined) updateData.scheduledDate = parseDate(data.scheduledDate);
+    if (data.frequency !== undefined) updateData.frequency = data.frequency;
+    if (data.serviceProvider !== undefined) updateData.serviceProvider = data.serviceProvider;
+    if (data.notes !== undefined) updateData.notes = data.notes;
+    if (data.status !== undefined) updateData.status = data.status;
+    if (data.completedDate !== undefined) updateData.completedDate = data.completedDate ? parseDate(data.completedDate) : null;
 
     const [task] = await this.db
       .update(maintenanceTasks)

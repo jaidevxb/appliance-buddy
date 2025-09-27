@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
-import { sendValidationError } from '../utils/responseHelpers.js';
+import { sendValidationError } from '../utils/responseHelpers';
 
 export const validateBody = (schema: z.ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {
