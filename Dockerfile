@@ -32,7 +32,10 @@ WORKDIR /app
 COPY backend ./backend
 
 # Install backend dependencies with legacy peer deps to avoid conflicts
-RUN cd backend && npm install --legacy-peer-deps && npm run build
+RUN cd backend && npm install --legacy-peer-deps
+
+# Build backend
+RUN cd backend && npm run build
 
 # Production stage
 FROM node:18-alpine AS production
@@ -64,4 +67,4 @@ EXPOSE 3000
 
 # Start both backend and frontend with Nginx proxy
 # Note: we're running the backend from the /app/backend directory
-CMD ["sh", "-c", "cd backend && PORT=3001 node dist/app.js & sleep 10 && node /app/test-backend.js && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "cd backend && node dist/app.js & sleep 5 && node /app/test-backend.js && nginx -g 'daemon off;'"]

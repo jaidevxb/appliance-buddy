@@ -3,10 +3,10 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export const config = {
-  port: process.env.PORT || 3002,
+  port: process.env.PORT || 3001, // Changed default to 3001 to match what the Dockerfile expects
   nodeEnv: process.env.NODE_ENV || 'development',
   databaseUrl: process.env.DATABASE_URL!,
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:8082,https://appliance-buddy.railway.app',
+  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000,https://appliance-buddy-production.up.railway.app',
   jwtSecret: process.env.JWT_SECRET || 'your-jwt-secret-here',
   
   // Supabase configuration
@@ -27,7 +27,7 @@ export const config = {
 };
 
 // Validate required environment variables
-const requiredEnvVars = ['DATABASE_URL'];
+const requiredEnvVars = ['DATABASE_URL', 'SUPABASE_URL', 'SUPABASE_ANON_KEY'];
 
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {

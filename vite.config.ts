@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
     cors: true,
   },
   preview: {
-    host: "::",
+    host: "0.0.0.0", // Changed from "::" to "0.0.0.0" for better compatibility
     port: 3000,
     // Allow Railway hosts for deployment
     strictPort: false,

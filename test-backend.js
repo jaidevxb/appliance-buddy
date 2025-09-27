@@ -2,76 +2,75 @@ const http = require('http');
 
 console.log('Testing backend connectivity...');
 
-// Test if backend is running on port 3001
-const options = {
-  hostname: 'localhost',
-  port: 3001,
-  path: '/health',
-  method: 'GET'
-};
+// Function to test endpoint
+function testEndpoint(path, description) {
+  return new Promise((resolve) => {
+    const options = {
+      hostname: 'localhost',
+      port: 3001,
+      path: path,
+      method: 'GET',
+      timeout: 5000
+    };
 
-console.log('Making request to backend...');
+    console.log(`\nTesting ${description}...`);
 
-const req = http.request(options, res => {
-  console.log(`Status Code: ${res.statusCode}`);
-  
-  let data = '';
-  res.on('data', chunk => {
-    data += chunk;
-  });
-  
-  res.on('end', () => {
-    console.log('Response headers:', res.headers);
-    console.log('Response body:', data);
-    
-    try {
-      const jsonData = JSON.parse(data);
-      console.log('Parsed JSON response:', jsonData);
-    } catch (err) {
-      console.error('Failed to parse JSON:', err.message);
-      console.log('Raw response:', data);
-    }
-  });
-});
-
-req.on('error', error => {
-  console.error('Backend is not accessible:', error.message);
-  console.error('Error details:', error);
-});
-
-req.setTimeout(5000, () => {
-  console.error('Request timeout - backend not responding');
-  req.destroy();
-});
-
-req.end();
-
-// Also test the test endpoint
-setTimeout(() => {
-  console.log('\nTesting /test endpoint...');
-  const testOptions = {
-    hostname: 'localhost',
-    port: 3001,
-    path: '/test',
-    method: 'GET'
-  };
-  
-  const testReq = http.request(testOptions, res => {
-    console.log(`Test endpoint Status Code: ${res.statusCode}`);
-    
-    let testData = '';
-    res.on('data', chunk => {
-      testData += chunk;
+    const req = http.request(options, res => {
+      console.log(`${description} Status Code: ${res.statusCode}`);
+      
+      let data = '';
+      res.on('data', chunk => {
+        data += chunk;
+      });
+      
+      res.on('end', () => {
+        console.log(`${description} response headers:`, res.headers);
+        if (res.statusCode === 200) {
+          try {
+            const jsonData = JSON.parse(data);
+            console.log(`${description} parsed JSON response:`, JSON.stringify(jsonData, null, 2));
+          } catch (err) {
+            console.error(`${description} failed to parse JSON:`, err.message);
+            console.log(`${description} raw response:`, data.substring(0, 200) + '...');
+          }
+        } else {
+          console.log(`${description} response:`, data.substring(0, 200) + '...');
+        }
+        resolve(res.statusCode === 200);
+      });
     });
-    
-    res.on('end', () => {
-      console.log('Test endpoint response:', testData);
+
+    req.on('error', error => {
+      console.error(`${description} not accessible:`, error.message);
+      resolve(false);
     });
+
+    req.on('timeout', () => {
+      console.error(`${description} timeout - not responding`);
+      req.destroy();
+      resolve(false);
+    });
+
+    req.end();
   });
+}
+
+// Test both endpoints
+async function testBackend() {
+  console.log('Making request to backend...');
   
-  testReq.on('error', error => {
-    console.error('Test endpoint not accessible:', error.message);
-  });
+  // Test health endpoint
+  const healthSuccess = await testEndpoint('/health', 'Health endpoint');
   
-  testReq.end();
-}, 2000);
+  // Test test endpoint
+  const testSuccess = await testEndpoint('/test', 'Test endpoint');
+  
+  if (healthSuccess || testSuccess) {
+    console.log('\n✅ Backend is running successfully!');
+  } else {
+    console.log('\n❌ Backend is not accessible');
+  }
+}
+
+// Run the tests
+testBackend();
