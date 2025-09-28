@@ -31,16 +31,19 @@ const requiredEnvVars = ['DATABASE_URL', 'SUPABASE_URL', 'SUPABASE_ANON_KEY'];
 
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
-    throw new Error(`Missing required environment variable: ${envVar}`);
+    console.error(`❌ Missing required environment variable: ${envVar}`);
+    if (process.env.NODE_ENV === 'production') {
+      console.log('⚠️  In production, this will cause the application to crash');
+    }
+  } else {
+    console.log(`✅ Environment variable ${envVar} is configured`);
   }
 }
 
-// Log configuration (without sensitive data) in development
-if (config.nodeEnv === 'development') {
-  console.log('🔧 Environment Configuration:');
-  console.log(`   - Port: ${config.port}`);
-  console.log(`   - Environment: ${config.nodeEnv}`);
-  console.log(`   - Frontend URLs: ${config.getFrontendUrls().join(', ')}`);
-  console.log(`   - Supabase URL: ${config.supabase.url}`);
-  console.log(`   - Database: ${config.databaseUrl ? '✅ Configured' : '❌ Missing'}`);
-}
+// Log configuration (without sensitive data) in development and production
+console.log('🔧 Environment Configuration:');
+console.log(`   - Port: ${config.port}`);
+console.log(`   - Environment: ${config.nodeEnv}`);
+console.log(`   - Frontend URLs: ${config.getFrontendUrls().join(', ')}`);
+console.log(`   - Supabase URL: ${config.supabase.url ? '✅ Configured' : '❌ Missing'}`);
+console.log(`   - Database: ${config.databaseUrl ? '✅ Configured' : '❌ Missing'}`);

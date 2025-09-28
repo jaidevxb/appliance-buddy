@@ -17,6 +17,19 @@ export const sql = postgres(connectionString, {
   idle_timeout: 20,
   connect_timeout: 10,
   ssl: 'require', // Supabase requires SSL
+  onnotice: (notice) => {
+    console.log('PostgreSQL Notice:', notice);
+  },
+  onerror: (err) => {
+    console.error('PostgreSQL Error:', err);
+  }
+});
+
+// Test the database connection
+sql`SELECT 1`.then(() => {
+  console.log('✅ Database connection successful');
+}).catch((err) => {
+  console.error('❌ Database connection failed:', err);
 });
 
 export const db = drizzle(sql, { schema });
