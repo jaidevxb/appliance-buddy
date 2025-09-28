@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Express.js backend for Appliance Buddy application",
-  "main": "dist/app.js",
+  "main": "src/app.ts",
   "scripts": {
     "dev": "tsx watch src/app.ts",
     "build": "tsc",
-    "start": "node dist/app.js",
+    "start": "tsx src/app.ts",
     "db:generate": "drizzle-kit generate:pg",
     "db:migrate": "drizzle-kit up:pg",
     "db:push": "drizzle-kit push:pg",
@@ -38,11 +38,11 @@
     "postgres": "^3.4.3",
     "typescript": "^5.3.0",
     "uuid": "^9.0.1",
+    "tsx": "^4.6.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.20.0",
-    "tsx": "^4.6.0"
+    "drizzle-kit": "^0.20.0"
   },
   "keywords": [
     "express",

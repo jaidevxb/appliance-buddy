@@ -18,7 +18,7 @@ import { authRoutes } from './routes/auth';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { authenticateUser, optionalAuth } from './middleware/auth';
 
-const app = express();
+const app: express.Application = express();
 
 // Security middleware
 app.use(helmet());
@@ -71,7 +71,7 @@ app.use('/api/appliances', optionalAuth, createApplianceRoutes(
 ));
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (req: express.Request, res: express.Response) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
@@ -81,7 +81,7 @@ app.get('/health', (req, res) => {
 });
 
 // Root endpoint
-app.get('/', (req, res) => {
+app.get('/', (req: express.Request, res: express.Response) => {
   res.json({
     message: 'Appliance Buddy API',
     version: '1.0.0',
@@ -90,7 +90,7 @@ app.get('/', (req, res) => {
 });
 
 // Add a simple test endpoint to verify the backend is running
-app.get('/test', (req, res) => {
+app.get('/test', (req: express.Request, res: express.Response) => {
   res.json({
     message: 'Backend is running',
     port: config.port,

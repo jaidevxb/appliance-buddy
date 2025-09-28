@@ -55,21 +55,31 @@ function testEndpoint(path, description) {
   });
 }
 
-// Test both endpoints
+// Test both endpoints with retries
 async function testBackend() {
   console.log('Making request to backend...');
   
-  // Test health endpoint
-  const healthSuccess = await testEndpoint('/health', 'Health endpoint');
-  
-  // Test test endpoint
-  const testSuccess = await testEndpoint('/test', 'Test endpoint');
-  
-  if (healthSuccess || testSuccess) {
-    console.log('\n✅ Backend is running successfully!');
-  } else {
-    console.log('\n❌ Backend is not accessible');
+  // Try multiple times with delays
+  for (let i = 0; i < 5; i++) {
+    console.log(`\nAttempt ${i + 1}/5...`);
+    
+    // Test health endpoint
+    const healthSuccess = await testEndpoint('/health', 'Health endpoint');
+    
+    if (healthSuccess) {
+      console.log('\n✅ Backend is running successfully!');
+      return;
+    }
+    
+    // Wait before retrying
+    if (i < 4) {
+      console.log('Waiting 3 seconds before retry...');
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
   }
+  
+  console.log('\n❌ Backend is not accessible after 5 attempts');
+  process.exit(1);
 }
 
 // Run the tests

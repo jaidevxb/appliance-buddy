@@ -1,15 +1,12 @@
-import { sql } from '../config/database';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 async function runAuthMigration() {
   try {
     console.log('🚀 Starting authentication migration...');
+    
+    // Import the database connection dynamically
+    const { sql } = await import('../config/database');
     
     // Read the latest migration file
     const migrationPath = path.join(__dirname, '../migrations/0001_misty_lionheart.sql');
@@ -51,6 +48,7 @@ async function runAuthMigration() {
     process.exit(1);
   } finally {
     // Close the database connection
+    const { sql } = await import('../config/database');
     await sql.end();
     console.log('🔌 Database connection closed');
     process.exit(0);

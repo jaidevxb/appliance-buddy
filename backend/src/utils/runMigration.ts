@@ -1,15 +1,12 @@
-import { sql } from '../config/database';
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 async function runMigration() {
   try {
     console.log('🚀 Starting database migration...');
+    
+    // Import the database connection dynamically
+    const { sql } = await import('../config/database');
     
     // Read the migration file
     const migrationPath = path.join(__dirname, '../migrations/0000_glorious_rocket_raccoon.sql');
@@ -53,6 +50,7 @@ async function runMigration() {
     process.exit(1);
   } finally {
     // Close the database connection
+    const { sql } = await import('../config/database');
     await sql.end();
     console.log('🔌 Database connection closed');
     process.exit(0);

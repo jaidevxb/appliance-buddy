@@ -1,1 +1,1 @@
-console.log('Test file compilation');
+console.log('Test file');

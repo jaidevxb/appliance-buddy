@@ -34,9 +34,6 @@ COPY backend ./backend
 # Install backend dependencies with legacy peer deps to avoid conflicts
 RUN cd backend && npm install --legacy-peer-deps
 
-# Build backend
-RUN cd backend && npm run build
-
 # Production stage
 FROM node:18-alpine AS production
 
@@ -45,10 +42,8 @@ WORKDIR /app
 # Copy built frontend files
 COPY --from=frontend-build /app/dist ./dist
 
-# Copy built backend files
-COPY --from=backend-build /app/backend/dist ./backend/dist
-COPY --from=backend-build /app/backend/node_modules ./backend/node_modules
-COPY --from=backend-build /app/backend/package*.json ./backend/
+# Copy backend files
+COPY --from=backend-build /app/backend ./backend
 
 # Copy nginx configuration
 COPY nginx.conf ./nginx.conf
@@ -62,9 +57,12 @@ RUN apk add --no-cache nginx
 # Copy nginx configuration to the correct location
 RUN cp nginx.conf /etc/nginx/nginx.conf
 
+# Install tsx for running TypeScript files directly
+RUN cd backend && npm install tsx
+
 # Expose port
 EXPOSE 3000
 
 # Start both backend and frontend with Nginx proxy
 # Note: we're running the backend from the /app/backend directory
-CMD ["sh", "-c", "cd backend && node dist/app.js & sleep 5 && node /app/test-backend.js && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "cd backend && npx tsx src/app.ts & sleep 5 && node /app/test-backend.js && nginx -g 'daemon off;'"]

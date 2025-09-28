@@ -1,14 +1,11 @@
-import { sql } from '../config/database';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
+// Remove the import.meta.url usage and use a simpler approach
 async function handleExistingData() {
   try {
     console.log('🔄 Handling existing data for authentication migration...');
     
+    // Import the database connection dynamically
+    const { sql } = await import('../config/database');
+
     // Step 1: Create the users table first
     console.log('📊 Creating users table...');
     await sql.unsafe(`
@@ -83,6 +80,7 @@ async function handleExistingData() {
     process.exit(1);
   } finally {
     // Close the database connection
+    const { sql } = await import('../config/database');
     await sql.end();
     console.log('🔌 Database connection closed');
     process.exit(0);
