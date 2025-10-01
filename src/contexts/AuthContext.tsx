@@ -73,7 +73,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // If successful and we have user data, register with our backend
     if (authData.user && data) {
       try {
-        const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
+        // Use the same API base URL configuration as in api.ts
+        const backendUrl = import.meta.env.PROD 
+          ? '/api'  // Relative path when deployed
+          : (import.meta.env.VITE_API_URL || 'http://localhost:3001/api');  // Absolute path for development
         const response = await fetch(`${backendUrl}/auth/register`, {
           method: 'POST',
           headers: {

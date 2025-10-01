@@ -55,7 +55,9 @@ COPY test-backend.js ./test-backend.js
 RUN apk add --no-cache nginx
 
 # Copy nginx configuration to the correct location
-RUN cp nginx.conf /etc/nginx/nginx.conf
+# Use envsubst to replace $PORT variable in nginx.conf
+RUN apk add --no-cache gettext
+RUN envsubst '${PORT}' < nginx.conf > /etc/nginx/nginx.conf
 
 # Install tsx for running TypeScript files directly
 RUN cd backend && npm install tsx
