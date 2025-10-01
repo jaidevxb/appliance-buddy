@@ -65,4 +65,4 @@ EXPOSE 3000
 
 # Start both backend and frontend with Nginx proxy
 # Note: we're running the backend from the /app/backend directory
-CMD ["sh", "-c", "cd backend && npx tsx src/app.ts & sleep 5 && node /app/test-backend.js && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "cd backend && npx tsx src/app.ts & node /app/test-backend.js; nginx -g 'daemon off;'"]

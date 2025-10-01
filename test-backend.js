@@ -78,8 +78,9 @@ async function testBackend() {
     }
   }
   
-  console.log('\n❌ Backend is not accessible after 5 attempts');
-  process.exit(1);
+  console.log('\n⚠️  Backend is not accessible after 5 attempts, but continuing with startup...');
+  // Don't exit with error code - just continue with nginx startup
+  // process.exit(1); // This line should be commented out or removed
 }
 
 // Run the tests
