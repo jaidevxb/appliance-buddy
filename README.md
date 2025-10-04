@@ -24,22 +24,28 @@ This project consists of two main parts:
 
 ### Local Development
 
-For local development, use the combined script:
+For local development, you can use either approach:
 
+**Single Container Approach (Legacy)**:
 ```bash
 npm run dev:full
 ```
 
-This starts both frontend (port 3000) and backend (port 3001) simultaneously.
+**Two Container Approach (Recommended)**:
+```bash
+docker-compose up
+```
+
+This starts both frontend (port 3000) and backend (port 3001) in separate containers.
 
 ### Railway Deployment (Recommended)
 
-This project includes a single Dockerfile that can deploy both frontend and backend services together:
+This project now supports a two-container deployment approach:
 
 1. **Deploy to Railway**:
    - Connect your GitHub repository to Railway
-   - Railway will automatically detect and use the Dockerfile
-   - Configure environment variables according to `.env.example` and `backend/.env.example`
+   - Railway will automatically detect and use the `railway.json` configuration
+   - Configure environment variables for both frontend and backend services
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed Railway deployment instructions.
 
@@ -62,14 +68,14 @@ For deployment to other hosting platforms, you'll need to:
 **For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)**
 
 1. **Backend (Railway)**:
-   - Deploy the `backend` folder to Railway
+   - Deploy the `backend` folder to Railway using `backend/Dockerfile`
    - Configure environment variables from `backend/.env.railway`
    - Railway will automatically handle builds and deployments
 
-2. **Frontend (Vercel)**:
-   - Connect the repository root to Vercel
-   - Configure environment variables from `.env.vercel`
-   - Vercel will automatically build and deploy the frontend
+2. **Frontend (Railway)**:
+   - Deploy the root folder to Railway using `frontend.Dockerfile`
+   - Configure environment variables from `.env.railway`
+   - Railway will automatically build and deploy the frontend
 
 ## Setup Instructions
 
@@ -78,6 +84,7 @@ For deployment to other hosting platforms, you'll need to:
 - Node.js (v18 or higher)
 - PostgreSQL database (for backend)
 - npm or yarn
+- Docker (for containerized deployment)
 
 ### Frontend Setup
 
@@ -153,20 +160,19 @@ For deployment to other hosting platforms, you'll need to:
 
 ### Running Both Frontend and Backend
 
-For development, you'll need to run both the frontend and backend servers:
+For development, you can use either approach:
 
-1. **Terminal 1 - Backend:**
-   ```sh
-   cd backend
-   npm run dev
-   ```
+**Single Terminal Approach**:
+```sh
+npm run dev:full
+```
 
-2. **Terminal 2 - Frontend:**
-   ```sh
-   npm run dev
-   ```
+**Two Container Approach (Recommended for production-like environment)**:
+```sh
+docker-compose up
+```
 
-The frontend will be available at `http://localhost:5173` and the backend API at `http://localhost:3001`.
+The frontend will be available at `http://localhost:3000` and the backend API at `http://localhost:3001`.
 
 ## How can I edit this code?
 
@@ -295,6 +301,10 @@ appliance-buddy/
 │   │   ├── types/         # TypeScript types and validation
 │   │   └── utils/         # Utility functions
 │   └── migrations/        # Database migrations
+├── docker-compose.yml     # Docker Compose configuration for local development
+├── frontend.Dockerfile    # Dockerfile for frontend service
+├── nginx.frontend.conf    # Nginx configuration for frontend
+├── railway.json           # Railway deployment configuration
 └── docs/                  # Documentation
 ```
 

@@ -9,17 +9,49 @@ This guide covers deploying the Appliance Buddy application.
 
 ## Local Development
 
-For local development, use the combined script:
+For local development, you can use either approach:
 
+**Single Container Approach**:
 ```bash
 npm run dev:full
 ```
 
-This starts both frontend (port 3000) and backend (port 3001) simultaneously.
+**Two Container Approach (Recommended)**:
+```bash
+docker-compose up
+```
+
+This starts both frontend (port 3000) and backend (port 3001) in separate containers.
 
 ## Railway Deployment
 
-### Single Dockerfile Deployment (Recommended)
+### Two-Container Deployment (Recommended)
+
+This project now supports a two-container deployment approach using `railway.json`:
+
+1. **Create a new Railway project**
+   - Go to [Railway Dashboard](https://railway.app/dashboard)
+   - Click "New Project" → "Deploy from GitHub repo"
+   - Select your repository
+
+2. **Configure the services**
+   - Railway will automatically detect the `railway.json` configuration
+   - Two services will be created: frontend and backend
+
+3. **Configure Environment Variables**
+   Add these environment variables in the Railway dashboard for the **backend** service:
+   
+   ```bash
+   DATABASE_URL=postgresql://postgres:[YOUR_PASSWORD]@db.qsnmybgvrwokifqndhga.supabase.co:5432/postgres
+   SUPABASE_URL=https://qsnmybgvrwokifqndhga.supabase.co
+   SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzbm15Ymd2cndva2lmcW5kaGdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcyMzQxNzMsImV4cCI6MjA3MjgxMDE3M30.mcLOZmFtAmxxWbZlta-YfC7JyrEIx03qxTlWEfSHVxM
+   NODE_ENV=production
+   FRONTEND_URL=https://your-frontend-service.up.railway.app
+   JWT_SECRET=your-secure-jwt-secret-for-production-change-this
+   PORT=3001
+   ```
+
+### Single Dockerfile Deployment (Legacy)
 
 This project includes a single [Dockerfile](file:///d:/appliance-buddy/Dockerfile) that can run both the frontend and backend services in a single container.
 
@@ -51,6 +83,7 @@ This project includes a single [Dockerfile](file:///d:/appliance-buddy/Dockerfil
 - Node.js (v18 or higher)
 - PostgreSQL database (for backend)
 - npm or yarn
+- Docker (for containerized deployment)
 
 ### Frontend Setup
 
@@ -126,20 +159,19 @@ This project includes a single [Dockerfile](file:///d:/appliance-buddy/Dockerfil
 
 ### Running Both Frontend and Backend
 
-For development, you'll need to run both the frontend and backend servers:
+For development, you can use either approach:
 
-1. **Terminal 1 - Backend:**
-   ```sh
-   cd backend
-   npm run dev
-   ```
+**Single Terminal Approach**:
+```sh
+npm run dev:full
+```
 
-2. **Terminal 2 - Frontend:**
-   ```sh
-   npm run dev
-   ```
+**Two Container Approach (Recommended for production-like environment)**:
+```sh
+docker-compose up
+```
 
-The frontend will be available at `http://localhost:5173` and the backend API at `http://localhost:3001`.
+The frontend will be available at `http://localhost:3000` and the backend API at `http://localhost:3001`.
 
 ## Environment Variables Reference
 
@@ -152,21 +184,22 @@ The frontend will be available at `http://localhost:5173` and the backend API at
 | `NODE_ENV` | `production` | Node environment |
 | `FRONTEND_URL` | Railway service URL | For CORS configuration |
 | `JWT_SECRET` | Strong random string | JWT token signing |
+| `PORT` | `3001` | Backend port (for two-container deployment) |
 
 ## Testing Deployment
 
 1. **Access the Application**
-   Open `https://your-service.up.railway.app` in browser
+   Open `https://your-frontend-service.up.railway.app` in browser
 
 2. **Backend API**
-   The backend API will be available at `https://your-service.up.railway.app/api`
+   The backend API will be available at `https://your-backend-service.up.railway.app/api`
 
 ## Troubleshooting
 
 ### Common Issues
 
 1. **CORS Errors**
-   - Ensure `FRONTEND_URL` in Railway matches your service URL exactly
+   - Ensure `FRONTEND_URL` in Railway matches your frontend service URL exactly
    - Check that the URL uses `https://`
 
 2. **Environment Variables Not Loading**
@@ -180,6 +213,12 @@ The frontend will be available at `http://localhost:5173` and the backend API at
 4. **Database Connection Issues**
    - Verify `DATABASE_URL` is correct in Railway
    - Check Supabase database accessibility
+
+### Port Configuration Issues
+
+If you encounter port binding errors:
+- For two-container deployment, ensure the backend service uses port 3001
+- For single-container deployment, check that no other services are using ports 3000/3001
 
 ## Automatic Deployments
 
@@ -196,4 +235,4 @@ Railway supports automatic deployments:
 
 ---
 
-🎉 **Your application is now ready for Railway deployment with a single Dockerfile!**
+🎉 **Your application is now ready for Railway deployment with either a single Dockerfile or the recommended two-container approach!**
