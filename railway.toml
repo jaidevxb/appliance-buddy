@@ -2,6 +2,8 @@
 
 [build]
 builder = "DOCKERFILE"
+# Explicitly tell Railway to use the railway.json configuration
+dockerfilePath = "Dockerfile"
 
 [deploy]
 # Use the CMD from Dockerfile instead of overriding it
