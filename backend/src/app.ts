@@ -117,6 +117,8 @@ process.on('uncaughtException', (err) => {
 // Start server
 const portNumber = typeof config.port === 'string' ? parseInt(config.port, 10) : config.port;
 console.log(`🚀 Attempting to start server on port ${portNumber}`);
+
+// For Render deployment, we need to bind to all interfaces
 const server = app.listen(portNumber, '0.0.0.0', () => {
   console.log(`✅ Server successfully running on port ${portNumber}`);
   console.log(`📊 Health check: http://localhost:${portNumber}/health`);
@@ -127,4 +129,19 @@ const server = app.listen(portNumber, '0.0.0.0', () => {
   if (err.message.includes('EADDRINUSE')) {
     console.error('   - Port is already in use. Try a different port.');
   }
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('Process terminated');
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  server.close(() => {
+    console.log('Process terminated');
+  });
 });

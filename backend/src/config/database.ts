@@ -24,9 +24,6 @@ export const sql = postgres(connectionString, {
   onnotice: (notice) => {
     console.log('PostgreSQL Notice:', notice);
   },
-  onerror: (err) => {
-    console.error('PostgreSQL Error:', err);
-  },
   onparameter: (key, value) => {
     // Log some connection parameters for debugging
     if (key === 'application_name' || key === 'client_encoding') {
@@ -40,7 +37,7 @@ console.log('🔍 Testing database connection...');
 sql`SELECT 1 as test`.then((result) => {
   console.log('✅ Database connection successful');
   console.log(`   - Test query result: ${JSON.stringify(result)}`);
-}).catch((err) => {
+}).catch((err: any) => {
   console.error('❌ Database connection failed:', err);
   console.error('   - Error code:', err.code);
   console.error('   - Error message:', err.message);

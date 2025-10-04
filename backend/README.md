@@ -1,6 +1,51 @@
 # Appliance Buddy Backend
 
-Express.js backend API for the Appliance Buddy application, built with TypeScript, Supabase PostgreSQL, and Drizzle ORM.
+This is the backend service for the Appliance Buddy application, built with Express.js, TypeScript, and PostgreSQL.
+
+## Deployment to Render
+
+This application is configured for deployment to Render with the following settings:
+
+- **Runtime**: Node.js
+- **Build Command**: `npm install`
+- **Start Command**: `npm start`
+- **Root Directory**: `backend/`
+
+The `render.yaml` file contains the deployment configuration.
+
+## Environment Variables
+
+The following environment variables must be set in Render:
+
+- `DATABASE_URL` - PostgreSQL database connection string
+- `SUPABASE_URL` - Supabase project URL
+- `SUPABASE_ANON_KEY` - Supabase anonymous key
+- `JWT_SECRET` - Secret key for JWT token signing
+- `FRONTEND_URL` - Comma-separated list of allowed frontend URLs for CORS
+- `PORT` - Port to run the application on (Render will set this to 10000)
+
+## Local Development
+
+To run the application locally:
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables (copy `.env.example` to `.env` and fill in values)
+
+4. Run in development mode:
+   ```bash
+   npm run dev
+   ```
+
+The application will start on port 3001 by default.
 
 ## Features
 

@@ -2,8 +2,9 @@ services:
   - type: web
     name: appliance-buddy-backend
     env: node
+    plan: free
     buildCommand: npm install
-    startCommand: npx tsx src/app.ts
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
