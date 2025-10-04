@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { ApplianceService } from '../services/applianceService';
-import { sendSuccess, sendNotFound } from '../utils/responseHelpers';
-import { asyncHandler } from '../middleware/errorHandler';
-import { ApplianceCreateData, ApplianceUpdateData } from '../types/api';
+import { ApplianceService } from '@/services/applianceService';
+import { sendSuccess, sendNotFound } from '@/utils/responseHelpers';
+import { asyncHandler } from '@/middleware/errorHandler';
+import { ApplianceCreateData, ApplianceUpdateData } from '@/types/api';
 
 export class ApplianceController {
   constructor(private applianceService: ApplianceService) {}

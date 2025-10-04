@@ -1,6 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
-import { sendValidationError } from '../utils/responseHelpers';
+import { sendValidationError } from '@/utils/responseHelpers';
+import { 
+  applianceCreateSchema, 
+  applianceUpdateSchema, 
+  maintenanceTaskSchema, 
+  maintenanceTaskUpdateSchema, 
+  supportContactSchema, 
+  supportContactUpdateSchema, 
+  linkedDocumentSchema, 
+  linkedDocumentUpdateSchema 
+} from '@/types/api';
 
 export const validateBody = (schema: z.ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -43,6 +53,12 @@ export const validateQuery = (schema: z.ZodSchema) => {
     }
   };
 };
+
+// Specific validation middleware functions
+export const validateAppliance = validateBody(applianceCreateSchema);
+export const validateMaintenanceTask = validateBody(maintenanceTaskSchema);
+export const validateSupportContact = validateBody(supportContactSchema);
+export const validateLinkedDocument = validateBody(linkedDocumentSchema);
 
 // Common parameter schemas
 export const uuidParamSchema = z.object({
