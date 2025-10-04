@@ -54,15 +54,6 @@ COPY test-backend.js ./test-backend.js
 # Install nginx and gettext for envsubst
 RUN apk add --no-cache nginx gettext
 
-# Create a script to process nginx configuration at runtime
-RUN echo '#!/bin/sh\n\
-# Set default PORT if not provided\n\
-export PORT=${PORT:-3000}\n\
-# Update nginx config with PORT value\n\
-sed -i "s/listen 3000;/listen ${PORT};/" /etc/nginx/nginx.conf\n\
-exec "$@"' > /usr/local/bin/run.sh && \
-    chmod +x /usr/local/bin/run.sh
-
 # Copy nginx config to the expected location
 RUN mkdir -p /etc/nginx && cp nginx.conf /etc/nginx/nginx.conf
 
@@ -74,4 +65,8 @@ EXPOSE 3000
 
 # Start both backend and frontend with Nginx proxy
 # Note: we're running the backend from the /app/backend directory
-CMD ["/usr/local/bin/run.sh", "sh", "-c", "cd backend && npx tsx src/app.ts & node /app/test-backend.js; nginx -g 'daemon off;'"]
+CMD sh -c '\
+export PORT=${PORT:-3000} && \
+sed -i "s/listen 3000;/listen ${PORT};/" /etc/nginx/nginx.conf && \
+cd backend && npx tsx src/app.ts & node /app/test-backend.js && \
+nginx -g "daemon off;"'
