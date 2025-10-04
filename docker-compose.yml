@@ -8,11 +8,9 @@ services:
     ports:
       - "3000:80"
     environment:
-      - REACT_APP_API_URL=http://localhost:3001/api
+      - VITE_API_URL=http://localhost:3001/api
     depends_on:
       - backend
-    volumes:
-      - ./nginx.frontend.conf:/etc/nginx/nginx.conf
 
   backend:
     build:
@@ -30,3 +28,4 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
+    working_dir: /app

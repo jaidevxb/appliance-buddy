@@ -2,7 +2,6 @@
 
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
 
 [deploy]
 # Use the CMD from Dockerfile instead of overriding it

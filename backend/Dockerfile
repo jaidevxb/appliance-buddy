@@ -19,5 +19,8 @@ RUN npm install tsx
 # Expose port (will be overridden by platform)
 EXPOSE 3001
 
+# Set working directory for proper execution
+WORKDIR /app
+
 # Start the application
 CMD ["npx", "tsx", "src/app.ts"]
