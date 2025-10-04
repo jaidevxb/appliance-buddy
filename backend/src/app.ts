@@ -3,20 +3,20 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 
-import { config } from './config/environment';
-import { db } from './config/database';
-import { ApplianceService } from './services/applianceService';
-import { MaintenanceService } from './services/maintenanceService';
-import { SupportContactService } from './services/supportContactService';
-import { LinkedDocumentService } from './services/linkedDocumentService';
-import { ApplianceController } from './controllers/applianceController';
-import { MaintenanceController } from './controllers/maintenanceController';
-import { SupportContactController } from './controllers/supportContactController';
-import { LinkedDocumentController } from './controllers/linkedDocumentController';
-import { createApplianceRoutes } from './routes/appliances';
-import { authRoutes } from './routes/auth';
-import { errorHandler, notFoundHandler } from './middleware/errorHandler';
-import { authenticateUser, optionalAuth } from './middleware/auth';
+import { config } from '@/config/environment';
+import { db } from '@/config/database';
+import { ApplianceService } from '@/services/applianceService';
+import { MaintenanceService } from '@/services/maintenanceService';
+import { SupportContactService } from '@/services/supportContactService';
+import { LinkedDocumentService } from '@/services/linkedDocumentService';
+import { ApplianceController } from '@/controllers/applianceController';
+import { MaintenanceController } from '@/controllers/maintenanceController';
+import { SupportContactController } from '@/controllers/supportContactController';
+import { LinkedDocumentController } from '@/controllers/linkedDocumentController';
+import { createApplianceRoutes } from '@/routes/appliances';
+import { authRoutes } from '@/routes/auth';
+import { errorHandler, notFoundHandler } from '@/middleware/errorHandler';
+import { authenticateUser, optionalAuth } from '@/middleware/auth';
 
 const app: express.Application = express();
 

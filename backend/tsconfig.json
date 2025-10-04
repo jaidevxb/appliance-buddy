@@ -15,9 +15,9 @@
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"]
     },
     "types": ["node"]
   },
