@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "tsx watch src/app.ts",
     "build": "tsc",
-    "start": "tsx src/app.ts",
+    "start": "node index.js",
+    "start:dev": "tsx src/app.ts",
     "db:generate": "drizzle-kit generate:pg",
     "db:migrate": "drizzle-kit up:pg",
     "db:push": "drizzle-kit push:pg",

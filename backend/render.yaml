@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: appliance-buddy-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npx tsx src/app.ts
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
