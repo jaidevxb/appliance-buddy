@@ -51,12 +51,10 @@ COPY nginx.conf ./nginx.conf
 # Copy test script to the root directory where it's expected to be run
 COPY test-backend.js ./test-backend.js
 
-# Install nginx
-RUN apk add --no-cache nginx
+# Install nginx and gettext for envsubst
+RUN apk add --no-cache nginx gettext
 
-# Copy nginx configuration to the correct location
-# Use envsubst to replace $PORT variable in nginx.conf
-RUN apk add --no-cache gettext
+# Process nginx configuration with envsubst to replace $PORT variable
 RUN envsubst '${PORT}' < nginx.conf > /etc/nginx/nginx.conf
 
 # Install tsx for running TypeScript files directly
