@@ -1,6 +1,6 @@
 const http = require('http');
 
-console.log('Testing backend connectivity...');
+console.log('🔍 Testing backend connectivity...');
 
 // Function to test endpoint
 function testEndpoint(path, description) {
@@ -10,10 +10,10 @@ function testEndpoint(path, description) {
       port: 3001, // Changed to 3001 to match the actual backend port
       path: path,
       method: 'GET',
-      timeout: 5000
+      timeout: 10000 // Increased timeout
     };
 
-    console.log(`\nTesting ${description}...`);
+    console.log(`\n🔍 Testing ${description}...`);
 
     const req = http.request(options, res => {
       console.log(`${description} Status Code: ${res.statusCode}`);
@@ -57,11 +57,11 @@ function testEndpoint(path, description) {
 
 // Test both endpoints with retries
 async function testBackend() {
-  console.log('Making request to backend...');
+  console.log('🔍 Making request to backend...');
   
   // Try multiple times with delays
   for (let i = 0; i < 5; i++) {
-    console.log(`\nAttempt ${i + 1}/5...`);
+    console.log(`\n🔄 Attempt ${i + 1}/5...`);
     
     // Test health endpoint
     const healthSuccess = await testEndpoint('/health', 'Health endpoint');
@@ -73,8 +73,8 @@ async function testBackend() {
     
     // Wait before retrying
     if (i < 4) {
-      console.log('Waiting 3 seconds before retry...');
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      console.log('⏳ Waiting 5 seconds before retry...');
+      await new Promise(resolve => setTimeout(resolve, 5000));
     }
   }
   

@@ -2,6 +2,16 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+// Log all environment variables for debugging (without sensitive data)
+console.log('🔧 Environment Variables Debug:');
+console.log(`   - NODE_ENV: ${process.env.NODE_ENV || 'not set'}`);
+console.log(`   - PORT: ${process.env.PORT || 'not set'}`);
+console.log(`   - DATABASE_URL present: ${!!process.env.DATABASE_URL}`);
+console.log(`   - SUPABASE_URL present: ${!!process.env.SUPABASE_URL}`);
+console.log(`   - SUPABASE_ANON_KEY present: ${!!process.env.SUPABASE_ANON_KEY}`);
+console.log(`   - JWT_SECRET present: ${!!process.env.JWT_SECRET}`);
+console.log(`   - FRONTEND_URL: ${process.env.FRONTEND_URL || 'not set'}`);
+
 export const config = {
   port: process.env.PORT || 3001, // Changed default to 3001 to match what the Dockerfile expects
   nodeEnv: process.env.NODE_ENV || 'development',

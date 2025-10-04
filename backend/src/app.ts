@@ -76,7 +76,8 @@ app.get('/health', (req: express.Request, res: express.Response) => {
     status: 'OK', 
     timestamp: new Date().toISOString(),
     version: '1.0.0',
-    environment: config.nodeEnv
+    environment: config.nodeEnv,
+    port: config.port
   });
 });
 
@@ -86,6 +87,7 @@ app.get('/', (req: express.Request, res: express.Response) => {
     message: 'Appliance Buddy API',
     version: '1.0.0',
     documentation: '/api/docs', // Future API documentation endpoint
+    port: config.port
   });
 });
 
@@ -113,24 +115,16 @@ process.on('uncaughtException', (err) => {
 });
 
 // Start server
-const server = app.listen(config.port, () => {
-  console.log(`🚀 Server running on port ${config.port}`);
-  console.log(`📊 Health check: http://localhost:${config.port}/health`);
-  console.log(`🔗 API base URL: http://localhost:${config.port}/api`);
+const portNumber = typeof config.port === 'string' ? parseInt(config.port, 10) : config.port;
+console.log(`🚀 Attempting to start server on port ${portNumber}`);
+const server = app.listen(portNumber, '0.0.0.0', () => {
+  console.log(`✅ Server successfully running on port ${portNumber}`);
+  console.log(`📊 Health check: http://localhost:${portNumber}/health`);
+  console.log(`🔗 API base URL: http://localhost:${portNumber}/api`);
   console.log(`🌍 Environment: ${config.nodeEnv}`);
-});
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
-  server.close(() => {
-    console.log('Process terminated');
-  });
-});
-
-process.on('SIGINT', () => {
-  console.log('SIGINT received, shutting down gracefully');
-  server.close(() => {
-    console.log('Process terminated');
-  });
+}).on('error', (err) => {
+  console.error(`❌ Failed to start server on port ${portNumber}:`, err);
+  if (err.message.includes('EADDRINUSE')) {
+    console.error('   - Port is already in use. Try a different port.');
+  }
 });
