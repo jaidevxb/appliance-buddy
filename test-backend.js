@@ -7,7 +7,7 @@ function testEndpoint(path, description) {
   return new Promise((resolve) => {
     const options = {
       hostname: 'localhost',
-      port: 8080, // Changed from 3001 to 8080 to match the actual backend port
+      port: 3001, // Changed to 3001 to match the actual backend port
       path: path,
       method: 'GET',
       timeout: 5000
