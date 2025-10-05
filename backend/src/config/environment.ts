@@ -13,10 +13,10 @@ console.log(`   - JWT_SECRET present: ${!!process.env.JWT_SECRET}`);
 console.log(`   - FRONTEND_URL: ${process.env.FRONTEND_URL || 'not set'}`);
 
 export const config = {
-  port: process.env.PORT || 3001, // Changed default to 3001 to match what the Dockerfile expects
+  port: process.env.PORT || 3001, // Default to 3001, but will use platform-assigned port in deployment
   nodeEnv: process.env.NODE_ENV || 'development',
   databaseUrl: process.env.DATABASE_URL!,
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000,https://appliance-buddy-production.up.railway.app',
+  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000,https://appliance-buddy-production.up.railway.app,https://appliance-buddy-eight.up.railway.app',
   jwtSecret: process.env.JWT_SECRET || 'your-jwt-secret-here',
   
   // Supabase configuration
