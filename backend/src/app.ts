@@ -17,6 +17,8 @@ import { createApplianceRoutes } from './routes/appliances';
 import { authRoutes } from './routes/auth';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { authenticateUser, optionalAuth } from './middleware/auth';
+import path from 'path';
+import express from 'express';
 
 const app: express.Application = express();
 
@@ -99,6 +101,21 @@ app.get('/test', (req: express.Request, res: express.Response) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Serve frontend files in production
+if (config.nodeEnv === 'production') {
+  const frontendDistPath = path.join(__dirname, '..', '..', 'frontend', 'dist');
+  app.use(express.static(frontendDistPath));
+  
+  // Serve index.html for all non-API routes
+  app.get('*', (req: express.Request, res: express.Response) => {
+    if (!req.path.startsWith('/api') && !req.path.startsWith('/health')) {
+      res.sendFile(path.join(frontendDistPath, 'index.html'));
+    } else {
+      res.status(404).send('Not Found');
+    }
+  });
+}
 
 // Add error handling for unhandled promise rejections and uncaught exceptions
 process.on('unhandledRejection', (reason, promise) => {

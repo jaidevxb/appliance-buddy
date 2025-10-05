@@ -56,6 +56,18 @@ This project is configured for deployment to Render:
    - Set the publish directory to `dist/`
    - Add the `VITE_API_URL` environment variable pointing to your backend
 
+### Railway Deployment (Single Service)
+
+This project can also be deployed as a single service on Railway:
+
+1. **Single Service Deployment**:
+   - Create a new Web Service on Railway
+   - Connect your GitHub repository
+   - Railway will automatically detect and use the [railway.json](file:///d:/appliance-buddy/railway.json) configuration
+   - Add the required environment variables
+   
+For detailed instructions, see [SINGLE_SERVICE_DEPLOYMENT.md](file:///d:/appliance-buddy/SINGLE_SERVICE_DEPLOYMENT.md)
+
 ### Vercel Deployment (Alternative for Frontend)
 
 1. Connect your GitHub repository to Vercel
@@ -63,6 +75,13 @@ This project is configured for deployment to Render:
 3. Set the build command to `npm run build`
 4. Set the output directory to `dist/`
 5. Add the `VITE_API_URL` environment variable pointing to your backend
+
+### Railway Deployment (Alternative for Frontend)
+
+1. Create a new Web Service on Railway
+2. Connect your GitHub repository
+3. Railway will automatically detect and use the [railway.json](file:///d:/appliance-buddy/railway.json) configuration
+4. Add the `VITE_API_URL` environment variable pointing to your backend
 
 ## Setup Instructions
 

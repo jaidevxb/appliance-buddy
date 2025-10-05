@@ -1,0 +1,31 @@
+{
+  "name": "appliance-buddy",
+  "version": "1.0.0",
+  "description": "Appliance Buddy - A complete home appliance management solution",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently --kill-others --names \"BACKEND,FRONTEND\" \"npm:start:backend\" \"npm:start:frontend\"",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run preview",
+    "dev": "concurrently --kill-others --names \"BACKEND,FRONTEND\" \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "concurrently \"npm:build:frontend\" \"npm:build:backend\"",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "test": "concurrently \"npm:test:frontend\" \"npm:test:backend\"",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && npm test"
+  },
+  "keywords": [
+    "appliance",
+    "management",
+    "home",
+    "inventory"
+  ],
+  "author": "Appliance Buddy Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
