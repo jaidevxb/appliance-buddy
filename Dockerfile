@@ -23,6 +23,10 @@ COPY . .
 WORKDIR /app/frontend
 RUN npm run build
 
+# Copy frontend dist to backend directory for serving
+WORKDIR /app
+RUN cp -r frontend/dist backend/dist
+
 WORKDIR /app/backend
 RUN npm run build
 

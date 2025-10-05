@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve frontend static files in production
 if (config.nodeEnv === 'production') {
-  const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
+  const frontendDistPath = path.join(__dirname, 'dist');
   app.use(express.static(frontendDistPath));
   
   // Serve index.html for all non-API routes
