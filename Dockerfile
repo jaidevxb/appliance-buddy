@@ -1,38 +1,23 @@
 # Combined Dockerfile for Appliance Buddy (Frontend + Backend)
 
-# Build stage
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
 WORKDIR /app
 
 # Copy all files
 COPY . .
 
-# Install frontend dependencies and build
+# Install frontend dependencies
 WORKDIR /app/frontend
 RUN npm install --legacy-peer-deps
-RUN npm run build
 
 # Install backend dependencies and build
 WORKDIR /app/backend
 RUN npm install
 
-# Production stage
-FROM node:18-alpine
-
-WORKDIR /app
-
-# Copy built frontend
-COPY --from=builder /app/frontend/dist ./frontend/dist
-
-# Copy built backend
-COPY --from=builder /app/backend/dist ./backend/dist
-COPY --from=builder /app/backend/package*.json ./backend/
-COPY --from=builder /app/backend/index.js ./backend/
-
-# Install production dependencies for backend
-WORKDIR /app/backend
-RUN npm install --production
+# Build frontend
+WORKDIR /app/frontend
+RUN npm run build
 
 # Set environment variables for module resolution
 ENV NODE_OPTIONS=--experimental-specifier-resolution=node
