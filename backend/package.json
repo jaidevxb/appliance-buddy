@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/app.ts",
-    "build": "tsc",
-    "start": "node -r tsconfig-paths/register index.js",
+    "build": "tsc && tsc-alias -p tsconfig.paths.json",
+    "start": "tsx src/app.ts",
     "postinstall": "npm run build",
     "start:dev": "tsx src/app.ts",
     "db:generate": "drizzle-kit generate:pg",
@@ -45,7 +45,9 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.20.0"
+    "drizzle-kit": "^0.20.0",
+    "esbuild-register": "^3.6.0",
+    "tsc-alias": "^1.8.16"
   },
   "keywords": [
     "express",
