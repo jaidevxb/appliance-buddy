@@ -16,6 +16,9 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "types": ["node"]
   },
   "include": [
