@@ -2,6 +2,7 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
+import path from 'path';
 
 import { config } from './config/environment';
 import { db } from './config/database';
@@ -17,8 +18,6 @@ import { createApplianceRoutes } from './routes/appliances';
 import { authRoutes } from './routes/auth';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { authenticateUser, optionalAuth } from './middleware/auth';
-import path from 'path';
-import express from 'express';
 
 const app: express.Application = express();
 
@@ -48,6 +47,23 @@ app.use(morgan('combined'));
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Serve frontend static files in production
+if (config.nodeEnv === 'production') {
+  const frontendDistPath = path.join(__dirname, '..', '..', 'frontend', 'dist');
+  app.use(express.static(frontendDistPath));
+  
+  // Serve index.html for all non-API routes
+  app.get('*', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    // If the request is for an API endpoint, continue with normal routing
+    if (req.path.startsWith('/api') || req.path.startsWith('/health')) {
+      next();
+    } else {
+      // Otherwise, serve the frontend index.html
+      res.sendFile(path.join(frontendDistPath, 'index.html'));
+    }
+  });
+}
 
 // Initialize services
 const applianceService = new ApplianceService(db);
@@ -85,12 +101,23 @@ app.get('/health', (req: express.Request, res: express.Response) => {
 
 // Root endpoint
 app.get('/', (req: express.Request, res: express.Response) => {
-  res.json({
-    message: 'Appliance Buddy API',
-    version: '1.0.0',
-    documentation: '/api/docs', // Future API documentation endpoint
-    port: config.port
-  });
+  if (config.nodeEnv === 'production') {
+    // In production, this will be handled by the static file middleware above
+    // This is just a fallback
+    res.json({
+      message: 'Appliance Buddy API',
+      version: '1.0.0',
+      documentation: '/api/docs', // Future API documentation endpoint
+      port: config.port
+    });
+  } else {
+    res.json({
+      message: 'Appliance Buddy API',
+      version: '1.0.0',
+      documentation: '/api/docs', // Future API documentation endpoint
+      port: config.port
+    });
+  }
 });
 
 // Add a simple test endpoint to verify the backend is running
@@ -101,21 +128,6 @@ app.get('/test', (req: express.Request, res: express.Response) => {
     timestamp: new Date().toISOString()
   });
 });
-
-// Serve frontend files in production
-if (config.nodeEnv === 'production') {
-  const frontendDistPath = path.join(__dirname, '..', '..', 'frontend', 'dist');
-  app.use(express.static(frontendDistPath));
-  
-  // Serve index.html for all non-API routes
-  app.get('*', (req: express.Request, res: express.Response) => {
-    if (!req.path.startsWith('/api') && !req.path.startsWith('/health')) {
-      res.sendFile(path.join(frontendDistPath, 'index.html'));
-    } else {
-      res.status(404).send('Not Found');
-    }
-  });
-}
 
 // Add error handling for unhandled promise rejections and uncaught exceptions
 process.on('unhandledRejection', (reason, promise) => {

@@ -25,7 +25,8 @@
   ],
   "author": "Appliance Buddy Team",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "concurrently": "^9.1.0"
-  }
+  },
+  "devDependencies": { }
 }

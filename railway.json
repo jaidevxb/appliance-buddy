@@ -6,11 +6,11 @@
   "services": {
     "appliance-buddy": {
       "dockerfilePath": "Dockerfile",
-      "port": 3000,
-      "healthcheckPath": "/",
+      "port": 3001,
+      "healthcheckPath": "/health",
       "environment": {
         "NODE_ENV": "production",
-        "PORT": "3000"
+        "PORT": "3001"
       }
     }
   }
