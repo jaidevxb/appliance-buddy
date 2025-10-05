@@ -4,27 +4,27 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files first to optimize Docker layer caching
 COPY frontend/package*.json ./frontend/
 COPY backend/package*.json ./backend/
+
+# Copy source code
+COPY frontend/ ./frontend/
+COPY backend/ ./backend/
 
 # Install frontend dependencies
 WORKDIR /app/frontend
 RUN npm install --legacy-peer-deps
 
-# Install backend dependencies
+# Install backend dependencies without running postinstall script
 WORKDIR /app/backend
-RUN npm install
+RUN npm install --ignore-scripts
 
-# Copy source code
-WORKDIR /app
-COPY . .
-
-# Build frontend and backend
-WORKDIR /app/frontend
+# Build backend and frontend
+WORKDIR /app/backend
 RUN npm run build
 
-WORKDIR /app/backend
+WORKDIR /app/frontend
 RUN npm run build
 
 # Expose port (backend will serve frontend)
