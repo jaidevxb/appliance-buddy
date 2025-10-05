@@ -4,19 +4,26 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy all files
-COPY . .
+# Copy package files first
+COPY frontend/package*.json ./frontend/
+COPY backend/package*.json ./backend/
 
-# Install frontend dependencies
+# Install dependencies
 WORKDIR /app/frontend
 RUN npm install --legacy-peer-deps
 
-# Install backend dependencies and build
 WORKDIR /app/backend
-RUN npm install
+RUN npm install --ignore-scripts
 
-# Build frontend
+# Copy source code
+WORKDIR /app
+COPY . .
+
+# Build applications
 WORKDIR /app/frontend
+RUN npm run build
+
+WORKDIR /app/backend
 RUN npm run build
 
 # Set environment variables for module resolution
