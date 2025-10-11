@@ -13,7 +13,7 @@ WORKDIR /app/frontend
 RUN npm install --legacy-peer-deps
 
 WORKDIR /app/backend
-RUN npm install --ignore-scripts
+RUN npm install --include=dev
 
 # Copy source code
 WORKDIR /app
@@ -27,7 +27,7 @@ RUN npm run build
 WORKDIR /app
 RUN cp -r frontend/dist backend/dist
 
-WORKDIR /app/backend
+WORKDIR /app/backend/backend
 RUN npm run build
 
 # Set environment variables for module resolution
@@ -37,5 +37,5 @@ ENV NODE_OPTIONS=--experimental-specifier-resolution=node
 EXPOSE 3001
 
 # Start the backend which will serve the frontend
-WORKDIR /app/backend
+WORKDIR /app/backend/backend
 CMD ["node", "index.js"]
