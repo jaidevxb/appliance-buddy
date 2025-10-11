@@ -13,7 +13,7 @@ WORKDIR /app/frontend
 RUN npm install --legacy-peer-deps
 
 WORKDIR /app/backend
-RUN npm install
+RUN npm install --ignore-scripts
 
 # Copy source code
 WORKDIR /app
